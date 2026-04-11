@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 226 42% 7%;
+    --foreground: 220 20% 96%;
+    --card: 226 34% 10%;
+    --card-foreground: 220 20% 96%;
+    --popover: 226 34% 10%;
+    --popover-foreground: 220 20% 96%;
+    --primary: 221 93% 64%;
+    --primary-foreground: 223 100% 98%;
+    --secondary: 270 73% 61%;
+    --secondary-foreground: 220 20% 96%;
+    --muted: 225 24% 16%;
+    --muted-foreground: 220 12% 72%;
+    --accent: 262 84% 65%;
+    --accent-foreground: 220 20% 96%;
+    --border: 224 27% 19%;
+    --input: 224 27% 19%;
+    --ring: 221 93% 64%;
+    --radius: 1.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #030303;
+    color: hsl(var(--foreground));
+    font-family: var(--font-body), sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  ::selection {
+    background: rgba(96, 165, 250, 0.34);
+  }
+}
+
+@layer components {
+  .surface {
+    @apply rounded-[40px] border border-white/5 bg-slate-900/40 backdrop-blur-xl transition-all duration-300;
+  }
+
+  .surface:hover {
+    @apply border-white/10 bg-slate-900/60 shadow-[0_8px_32px_rgba(59,130,246,0.05)];
+  }
+
+  .surface-strong {
+    @apply rounded-[40px] border border-white/5 bg-[#030303] backdrop-blur-xl shadow-2xl;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-300;
+  }
+
+  .hide-scroll-bar-custom::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500 bg-clip-text text-transparent;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@layer utilities {
+  .prose-touchpointe {
+    @apply max-w-none text-base leading-7 text-slate-200;
+  }
+
+  .prose-touchpointe h2 {
+    @apply mt-10 text-2xl font-semibold text-white;
+  }
+
+  .prose-touchpointe h3 {
+    @apply mt-8 text-xl font-semibold text-white;
+  }
+
+  .prose-touchpointe p {
+    @apply mt-4 text-slate-300;
+  }
+
+  .prose-touchpointe ul {
+    @apply mt-4 list-disc space-y-2 pl-6 text-slate-300;
+  }
+
+  .prose-touchpointe strong {
+    @apply text-white;
+  }
+}
