@@ -38,7 +38,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   return (
     <>
-      <SectionWrapper className="pt-12 sm:pt-16">
+      <SectionWrapper className="pt-28 sm:pt-32">
         <ContentDetail item={item} resource="products" />
       </SectionWrapper>
       {related.length ? (
@@ -52,4 +52,3 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     </>
   );
 }
-

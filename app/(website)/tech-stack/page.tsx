@@ -4,13 +4,14 @@ import { PageHero } from "@/components/site/page-hero";
 import { SectionWrapper } from "@/components/site/section-wrapper";
 import { TechStackBoard } from "@/components/site/tech-stack-board";
 import { WorkflowTimeline } from "@/components/site/workflow-timeline";
+import { workflowSteps } from "@/lib/seed-data";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function TechStackPage() {
   return (
     <>
-      <SectionWrapper className="pt-12 sm:pt-16">
+      <SectionWrapper className="pt-28 sm:pt-32">
         <PageHero
           eyebrow="Technology"
           title="A modern stack tuned for growth, speed, and editorial control."
@@ -27,7 +28,7 @@ export default function TechStackPage() {
               The system is designed so content strategy, design, engineering, and publishing all move through the same reliable operating layer.
             </p>
             <div className="mt-8">
-              <WorkflowTimeline />
+              <WorkflowTimeline steps={workflowSteps} />
             </div>
             <Link href="/contact" className={cn(buttonVariants.variant.default, buttonVariants.size.default, "mt-8 rounded-full px-5")}>
               Build something similar
@@ -38,4 +39,3 @@ export default function TechStackPage() {
     </>
   );
 }
-

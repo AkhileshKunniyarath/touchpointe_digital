@@ -5,7 +5,8 @@ export const homepageSchema = z.object({
   
   capabilities: z.array(z.object({
     title: z.string(),
-    desc: z.string()
+    desc: z.string(),
+    slug: z.string().optional()
   })).optional(),
   
   stats: z.array(z.object({

@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpenText, BriefcaseBusiness, FolderKanban, ImageIcon, Lightbulb, Package, LayoutTemplate, Activity, Briefcase } from "lucide-react";
+import { BarChart3, BookOpenText, BriefcaseBusiness, FolderKanban, ImageIcon, Lightbulb, Package, LayoutTemplate, Briefcase } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -24,11 +25,15 @@ export function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-[#020202] border-r border-white/5 hidden lg:flex flex-col shadow-2xl">
       <div className="p-8 flex items-center gap-4 border-b border-white/5">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-          <Activity className="w-5 h-5 text-white" />
-        </div>
+        <Image
+          src="/brand/logo.jpeg"
+          alt="Touchpointe logo"
+          width={40}
+          height={40}
+          className="rounded-xl border border-white/10 shadow-[0_0_20px_rgba(59,130,246,0.25)]"
+        />
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Touchpointe</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">Touchpointe Digital</h2>
           <p className="text-xs text-slate-500 uppercase tracking-[0.2em] font-black mt-0.5">Admin Server</p>
         </div>
       </div>

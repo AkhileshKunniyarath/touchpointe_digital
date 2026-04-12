@@ -40,7 +40,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyDetailPag
 
   return (
     <>
-      <SectionWrapper className="pt-12 sm:pt-16">
+      <SectionWrapper className="pt-28 sm:pt-32">
         <ContentDetail item={item} resource="case-studies" />
       </SectionWrapper>
       {related.length ? (

@@ -2,10 +2,11 @@ import Link from "next/link";
 import { ArrowRight, Code, Smartphone, Briefcase, Database, CloudUpload, Cpu, Shield, Globe, Award, Settings, Layers, Zap } from "lucide-react";
 
 import { SectionWrapper } from "@/components/site/section-wrapper";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import { TestimonialSlider } from "@/components/site/testimonial-slider";
 import { ServicePicker } from "@/components/site/service-picker";
 import { ContactForm } from "@/components/site/contact-form";
+import { WorkflowTimeline } from "@/components/site/workflow-timeline";
 
 import { connectToDatabase } from "@/lib/mongodb";
 import Homepage from "@/models/Homepage";
@@ -44,12 +45,12 @@ const defaultCopy = {
 };
 
 const capabilitiesFallback = [
-  { title: "Web Development", desc: "Enterprise grade runtimes." },
-  { title: "Mobile App Development", desc: "Native iOS and Android." },
-  { title: "Saas Products", desc: "MVP to scalable platforms." },
-  { title: "Data Intelligence", desc: "Predictive BI insights." },
-  { title: "Automation", desc: "Agent loops and workflows." },
-  { title: "Enterprise Platforms", desc: "Secure vast operations." }
+  { title: "UI / UX Design", desc: "Journey-first design systems for web and mobile products.", slug: "ui-ux-design" },
+  { title: "Web Development", desc: "Scalable engineering for conversion and reliability.", slug: "web-development" },
+  { title: "Mobile App Development", desc: "Native and cross-platform product delivery for iOS and Android.", slug: "mobile-app-development" },
+  { title: "Platform Development", desc: "Enterprise-ready product platforms and portals.", slug: "platform-development" },
+  { title: "Cloud Computing", desc: "Cloud modernization, DevOps, and managed operations.", slug: "cloud-computing" },
+  { title: "AI and Machine Learning", desc: "Applied AI workflows for smarter business decisions.", slug: "ai-machine-learning" }
 ];
 
 const statsFallback = [
@@ -119,6 +120,13 @@ export default async function HomePage() {
     console.warn("Database Connection Unstable. Falling back to local native structures.");
   }
 
+  let publishedServices: any[] = [];
+  try {
+    publishedServices = await getCollection("services", { status: "published" });
+  } catch (error) {
+    publishedServices = [];
+  }
+
   // Real Database Fetching Mixed With DB Fallbacks
   const copy = { ...defaultCopy, ...(dbData?.copy || {}) };
   
@@ -128,11 +136,99 @@ export default async function HomePage() {
   const dbIndustries = dbData?.industries?.length ? dbData.industries : industriesFallback;
   const dbTestimonials = dbData?.testimonials?.length ? dbData.testimonials : testimonialsFallback;
   
-  const dbCapabilities = dbData?.capabilities?.length ? dbData.capabilities : capabilitiesFallback;
+  const serviceSlugSet = new Set(publishedServices.map((service) => String(service.slug)));
+  const preferredCapabilitySlugs = [
+    "ui-ux-design",
+    "web-development",
+    "mobile-app-development",
+    "platform-development",
+    "cloud-computing",
+    "ai-machine-learning"
+  ];
+
+  const serviceBySlug = new Map(publishedServices.map((service) => [String(service.slug), service] as const));
+  const prioritizedServices = preferredCapabilitySlugs
+    .map((slug) => serviceBySlug.get(slug))
+    .filter(Boolean) as any[];
+  const remainingServices = publishedServices.filter((service) => !preferredCapabilitySlugs.includes(String(service.slug)));
+
+  const serviceDrivenCapabilities = [...prioritizedServices, ...remainingServices].map((service) => ({
+    title: String(service.title || ""),
+    desc: String(service.summary || ""),
+    slug: String(service.slug || "")
+  }));
+
+  const capabilitySource = serviceDrivenCapabilities.length
+    ? serviceDrivenCapabilities
+    : dbData?.capabilities?.length
+      ? dbData.capabilities
+      : capabilitiesFallback;
+
+  const normalizedCapabilities = capabilitySource.map((cap: any) => {
+    const title = String(cap?.title || "").trim();
+    const desc = String(cap?.desc || cap?.summary || "").trim();
+    const candidateSlug = String(cap?.slug || slugify(title)).trim();
+
+    return {
+      title,
+      desc,
+      slug: serviceSlugSet.has(candidateSlug) ? candidateSlug : ""
+    };
+  }).filter((cap) => cap.title);
+  const capabilityFromService = (slug: string) => {
+    const service = serviceBySlug.get(slug);
+    if (!service) {
+      return null;
+    }
+
+    return {
+      title: String(service.title || ""),
+      desc: String(service.summary || ""),
+      slug: String(service.slug || "")
+    };
+  };
+
+  const withRequiredCapabilities = [...normalizedCapabilities];
+  for (const slug of ["ui-ux-design", "web-development", "mobile-app-development"]) {
+    if (withRequiredCapabilities.some((cap) => cap.slug === slug)) {
+      continue;
+    }
+
+    const nextCapability = capabilityFromService(slug);
+    if (nextCapability) {
+      withRequiredCapabilities.unshift(nextCapability);
+    }
+  }
+
+  const uniqueCapabilities = withRequiredCapabilities.reduce<Array<{ title: string; desc: string; slug: string }>>((acc, item) => {
+    const key = item.slug || item.title.toLowerCase();
+    if (!acc.some((entry) => (entry.slug || entry.title.toLowerCase()) === key)) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+
+  const dbCapabilities = uniqueCapabilities.length
+    ? uniqueCapabilities
+    : capabilitiesFallback
+        .map((cap) => ({
+          ...cap,
+          slug: serviceSlugSet.has(cap.slug) ? cap.slug : ""
+        }))
+        .filter((cap) => cap.title);
+
   const dbStats = dbData?.stats?.length ? dbData.stats : statsFallback;
   const dbProducts = dbData?.productsList?.length ? dbData.productsList : productsListFallback;
   const dbLabMetrics = dbData?.labMetrics?.length ? dbData.labMetrics : labMetricsFallback;
   const dbLabSteps = dbData?.labSteps?.length ? dbData.labSteps : labStepsFallback;
+
+  // Fetch 3 most recent published case studies for "Recent Work" section
+  let recentWork: any[] = [];
+  try {
+    recentWork = await getCollection("case-studies", { status: "published", limit: 3 });
+  } catch (e) {
+    recentWork = [];
+  }
 
   return (
     <>
@@ -211,15 +307,18 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {dbCapabilities.map((cap: any, i: number) => {
             const Icon = getCapabilityIcon(i);
+            const href = cap.slug ? `/services/${cap.slug}` : "/services";
             return (
-              <div key={i} className="surface relative p-10 flex flex-col h-full group hover:border-blue-500/30 transition-all rounded-3xl">
-                <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center mb-8 border border-white/10">
+              <Link key={i} href={href} className="surface relative p-10 flex flex-col h-full group hover:border-blue-500/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(59,130,246,0.1)] transition-all duration-300 rounded-3xl cursor-pointer">
+                <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center mb-8 border border-white/10 group-hover:border-blue-500/40 group-hover:bg-blue-500/10 transition-all">
                    <Icon className="w-6 h-6 text-slate-300 group-hover:text-blue-400 transition-colors" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-2xl font-semibold text-white mb-3">{cap.title}</h3>
                 <p className="text-sm text-[#A1A1AA] flex-1 mb-8 leading-relaxed">{cap.desc}</p>
-                <span className="inline-flex items-center text-xs font-bold text-white tracking-widest mt-auto opacity-50 group-hover:opacity-100 group-hover:text-blue-400">LEARN MORE <ArrowRight className="ml-2 w-3 h-3" /></span>
-              </div>
+                <span className="inline-flex items-center text-xs font-bold text-white tracking-widest mt-auto opacity-50 group-hover:opacity-100 group-hover:text-blue-400 transition-all">
+                  LEARN MORE <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
             );
           })}
         </div>
@@ -255,6 +354,80 @@ export default async function HomePage() {
         </SectionWrapper>
       </div>
 
+      {/* ── Recent Work Section ─────────────────────────────── */}
+      <div className="w-full relative bg-[#040404] border-y border-white/5">
+        <SectionWrapper className="py-28">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-500 mb-4">Our Work</p>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight">Recent Projects</h2>
+            </div>
+            <Link
+              href="/case-studies"
+              className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors shrink-0 group"
+            >
+              View all case studies
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {recentWork.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentWork.map((item: any, i: number) => (
+                <Link
+                  key={item._id || i}
+                  href={`/case-studies/${item.slug}`}
+                  className="group surface relative overflow-hidden flex flex-col hover:border-blue-500/40 transition-all duration-500 rounded-3xl"
+                >
+                  {/* Gradient top bar */}
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* Cover image or gradient placeholder */}
+                  <div className="relative w-full h-52 overflow-hidden rounded-t-3xl bg-gradient-to-br from-slate-800 to-slate-900">
+                    {item.coverImage ? (
+                      <img
+                        src={item.coverImage}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-slate-900 to-indigo-900/30 flex items-center justify-center">
+                        <span className="text-7xl font-black text-white/5 select-none">{String(i + 1).padStart(2, "0")}</span>
+                      </div>
+                    )}
+                    <div className="absolute bottom-4 left-4">
+                      <span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-300 bg-blue-500/20 border border-blue-500/30 px-3 py-1 rounded-full">
+                        {item.category || "Case Study"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-8 flex flex-col flex-1">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-100 transition-colors leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-slate-400 leading-relaxed flex-1 line-clamp-3">
+                      {item.summary}
+                    </p>
+                    <div className="mt-6 flex items-center gap-2 text-xs font-bold text-blue-400 group-hover:text-blue-300 transition-colors">
+                      Read case study <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center surface p-16 rounded-3xl border-dashed">
+              <p className="text-slate-500 font-semibold">Case studies will appear here once published from the CMS.</p>
+              <Link href="/contact" className="inline-flex items-center gap-2 mt-4 text-blue-400 text-sm font-medium hover:text-white transition-colors">
+                Discuss your project <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
+        </SectionWrapper>
+      </div>
+
       <div className="w-full relative bg-gradient-to-b from-[#030303] to-[#050505]">
         <SectionWrapper className="py-32">
           <div className="mb-24 text-center">
@@ -267,31 +440,7 @@ export default async function HomePage() {
             </h2>
           </div>
 
-          <div className="relative max-w-6xl mx-auto">
-             <div className="absolute left-8 md:left-1/2 top-4 bottom-4 w-[2px] bg-gradient-to-b from-transparent via-blue-500/20 to-transparent md:-translate-x-1/2 z-0" />
-             <div className="absolute left-8 md:left-1/2 top-4 bottom-4 w-px border-l border-dashed border-white/20 md:-translate-x-1/2 z-0" />
-
-             <div className="grid gap-12 md:gap-20 relative z-10">
-                {dbWorkflowSteps.map((step: any, idx: number) => {
-                   const isEven = idx % 2 === 0;
-                   return (
-                     <div key={idx} className={`relative flex flex-col md:flex-row items-center gap-4 md:gap-8 ${isEven ? 'md:flex-row-reverse' : ''} group`}>
-                       <div className="absolute left-[26px] md:left-1/2 mt-1 md:mt-0 top-8 md:top-1/2 md:-translate-y-1/2 md:-translate-x-[50%] w-4 h-4 rounded-full bg-[#030303] border-2 border-slate-600 transition-all duration-500 group-hover:scale-150 group-hover:bg-blue-500 group-hover:border-white z-20" />
-                       <div className={`w-full md:w-1/2 pl-16 md:pl-0 ${isEven ? 'md:pr-16 md:text-right flex md:justify-end' : 'md:pl-16 text-left flex md:justify-start'}`}>
-                          <div className={`surface relative z-10 w-full max-w-md p-10 lg:p-12 transition-all duration-[600ms] border-white/5 
-                                          group-hover:border-blue-500/40 group-hover:bg-gradient-to-br group-hover:from-blue-900/20 group-hover:to-[#030303] 
-                                          overflow-hidden ${isEven ? 'group-hover:-translate-x-4 md:rounded-r-none border-r-4 border-r-transparent group-hover:border-r-blue-500 rounded-[2rem]' : 'group-hover:translate-x-4 md:rounded-l-none border-l-4 border-l-transparent group-hover:border-l-blue-500 rounded-[2rem]'}`}>
-                             <span className={`absolute -top-10 ${isEven ? 'left-4' : 'right-4'} text-[10rem] font-black text-white/[0.02] select-none pointer-events-none group-hover:text-blue-500/[0.05] transition-colors duration-700 leading-none`}>{step.id || String(idx + 1).padStart(2, '0')}</span>
-                             <h3 className="text-3xl font-extrabold text-white mb-4 relative z-20">{step.title}</h3>
-                             <p className="text-slate-400 text-lg leading-relaxed relative z-20">{step.desc}</p>
-                          </div>
-                       </div>
-                       <div className="hidden md:block w-1/2" />
-                     </div>
-                   );
-                })}
-             </div>
-          </div>
+          <WorkflowTimeline steps={dbWorkflowSteps} />
         </SectionWrapper>
       </div>
 

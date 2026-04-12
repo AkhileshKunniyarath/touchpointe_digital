@@ -40,7 +40,7 @@ const homepageSchema = new Schema({
     ctaBtn: { type: String, default: "Let's talk" }
   },
 
-  capabilities: { type: [{ title: String, desc: String }], default: [] },
+  capabilities: { type: [{ title: String, desc: String, slug: String }], default: [] },
   stats: { type: [{ label: String, value: String }], default: [] },
   productsList: { type: [{ title: String, desc: String, tagline: String }], default: [] },
   labMetrics: { type: [{ label: String, value: String }], default: [] },

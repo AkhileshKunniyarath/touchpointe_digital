@@ -26,7 +26,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   ]);
 
   return (
-    <SectionWrapper className="pt-12 sm:pt-16">
+    <SectionWrapper className="pt-28 sm:pt-32">
       <div className="space-y-8">
         <PageHero eyebrow="Blogs" title={config.headline} description={config.description} />
         <FilterToolbar categories={categories} />
@@ -35,4 +35,3 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
     </SectionWrapper>
   );
 }
-

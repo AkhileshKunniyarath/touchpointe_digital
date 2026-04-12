@@ -198,10 +198,21 @@ export function HomepageEditor({ initialData }: { initialData: any }) {
                       <button onClick={() => removeArrayObj("capabilities", i)} className="absolute top-2 right-2 text-red-500"><Trash2 className="w-4 h-4"/></button>
                       <input value={cap.title} onChange={e => updateArrayObj("capabilities", i, "title", e.target.value)} className="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white outline-none mb-3" placeholder="Title" />
                       <textarea value={cap.desc} onChange={e => updateArrayObj("capabilities", i, "desc", e.target.value)} className="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white outline-none h-16" placeholder="Description" />
+                      <input
+                        value={cap.slug || ""}
+                        onChange={e => updateArrayObj("capabilities", i, "slug", e.target.value)}
+                        className="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white outline-none mt-3"
+                        placeholder="service-slug (optional)"
+                      />
                     </div>
                   ))}
                 </div>
-                <button onClick={() => setData({...data, capabilities: [...data.capabilities, { title: "", desc: "" }]})} className="mt-4 px-4 py-2 border border-blue-500/30 text-blue-400 rounded-lg text-sm font-bold">Add Capability Card</button>
+                <button
+                  onClick={() => setData({ ...data, capabilities: [...data.capabilities, { title: "", desc: "", slug: "" }] })}
+                  className="mt-4 px-4 py-2 border border-blue-500/30 text-blue-400 rounded-lg text-sm font-bold"
+                >
+                  Add Capability Card
+                </button>
              </div>
 
              <div className="bg-[#030303] border border-white/10 rounded-2xl p-8 shadow-xl">

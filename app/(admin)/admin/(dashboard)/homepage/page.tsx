@@ -51,12 +51,12 @@ export default async function HomepageAdminRoute() {
     aiSolutions: [],
     testimonials: [],
     capabilities: [
-      { title: "Web Development", desc: "Enterprise grade runtimes." },
-      { title: "Mobile App Development", desc: "Native iOS and Android." },
-      { title: "Saas Products", desc: "MVP to scalable platforms." },
-      { title: "Data Intelligence", desc: "Predictive BI insights." },
-      { title: "Automation", desc: "Agent loops and workflows." },
-      { title: "Enterprise Platforms", desc: "Secure vast operations." }
+      { title: "UI / UX Design", desc: "Journey-first design systems for web and mobile products.", slug: "ui-ux-design" },
+      { title: "Web Development", desc: "Scalable engineering for conversion and reliability.", slug: "web-development" },
+      { title: "Mobile App Development", desc: "Native and cross-platform product delivery for iOS and Android.", slug: "mobile-app-development" },
+      { title: "Platform Development", desc: "Enterprise-ready product platforms and portals.", slug: "platform-development" },
+      { title: "Cloud Computing", desc: "Cloud modernization, DevOps, and managed operations.", slug: "cloud-computing" },
+      { title: "AI and Machine Learning", desc: "Applied AI workflows for smarter business decisions.", slug: "ai-machine-learning" }
     ],
     stats: [
       { label: "DEPLOYMENTS", value: "500+" },

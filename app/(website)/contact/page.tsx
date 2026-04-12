@@ -12,7 +12,7 @@ const serviceOptions = [
 
 export default function ContactPage() {
   return (
-    <SectionWrapper className="pt-12 sm:pt-16">
+    <SectionWrapper className="pt-28 sm:pt-32">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <PageHero
           eyebrow="Contact"
