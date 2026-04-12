@@ -78,7 +78,7 @@ export function TestimonialSlider({ testimonials }: { testimonials: any[] }) {
                     className="w-full"
                   >
                      <p className="text-2xl md:text-3xl lg:text-[2.5rem] font-bold text-white leading-[1.3] mb-12 tracking-tight">
-                        "{testimonials[current].quote}"
+                        &quot;{testimonials[current].quote}&quot;
                      </p>
                      
                      <div className="flex items-center gap-6">

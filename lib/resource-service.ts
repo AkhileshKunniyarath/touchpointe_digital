@@ -7,9 +7,10 @@ import type {
   ResourceKey
 } from "@/lib/content-types";
 import { connectToDatabase } from "@/lib/mongodb";
+import { localStoreCreate, localStoreDelete, localStoreGetAll, localStoreUpdate } from "@/lib/local-store";
 import { resourceKeys } from "@/lib/resource-config";
 import { getSeedCollection } from "@/lib/seed-data";
-import { arrayFromCsv, readingTimeFromText, slugify } from "@/lib/utils";
+import { arrayFromCsv, readingTimeFromText, slugify, toDisplayImageUrl } from "@/lib/utils";
 import Blog from "@/models/Blog";
 import CaseStudy from "@/models/CaseStudy";
 import ContactSubmission from "@/models/ContactSubmission";
@@ -152,7 +153,7 @@ function normalizePayload(resource: ResourceKey, payload: Record<string, unknown
     summary: asString(payload.summary),
     content: asString(payload.content),
     category: asString(payload.category),
-    coverImage: asString(payload.coverImage),
+    coverImage: toDisplayImageUrl(asString(payload.coverImage)),
     featured: asBoolean(payload.featured),
     status: asString(payload.status) === "draft" ? "draft" : "published",
     seoTitle: asString(payload.seoTitle),
@@ -260,7 +261,30 @@ export async function getCollection<T extends ResourceKey>(
     return await queryDatabase(resource, filters);
   } catch (error) {
     logFallback(resource, error);
-    return filterSeedCollection(resource, filters);
+
+    // Merge local store items (written when DB was down) on top of seed fallback.
+    // Local items take priority and are de-duped by slug.
+    const seedItems = filterSeedCollection(resource, filters);
+    const localItems = localStoreGetAll(resource) as unknown as ResourceCollectionMap[T];
+
+    if (localItems.length === 0) {
+      return seedItems;
+    }
+
+    const localSlugs = new Set(localItems.map((i: any) => i.slug));
+    const filteredSeed = seedItems.filter((i: any) => !localSlugs.has(i.slug));
+
+    let merged = [...localItems, ...filteredSeed] as ResourceCollectionMap[T];
+
+    if (filters.status && filters.status !== "all") {
+      merged = merged.filter((i: any) => i.status === filters.status) as ResourceCollectionMap[T];
+    }
+
+    if (filters.limit) {
+      merged = merged.slice(0, filters.limit) as ResourceCollectionMap[T];
+    }
+
+    return merged;
   }
 }
 
@@ -280,6 +304,17 @@ export async function getDocumentBySlug<T extends ResourceKey>(
     return item ? (serialize(item) as unknown as ResourceCollectionMap[T][number]) : null;
   } catch (error) {
     logFallback(resource, error);
+
+    // Check local store first — it has the most up-to-date saved data.
+    const localItems = localStoreGetAll(resource);
+    const localMatch = localItems.find(
+      (item: any) => item.slug === slug && (includeDrafts ? true : item.status === "published")
+    );
+
+    if (localMatch) {
+      return localMatch as unknown as ResourceCollectionMap[T][number];
+    }
+
     return (
       getSeedCollection(resource).find(
         (item) => item.slug === slug && (includeDrafts ? true : item.status === "published")
@@ -292,25 +327,36 @@ export async function getDocumentById<T extends ResourceKey>(
   resource: T,
   id: string
 ): Promise<ResourceCollectionMap[T][number] | null> {
-  await connectToDatabase();
-  const Model = resourceModels[resource];
-  const item = await Model.findById(id).lean();
-  return item ? (serialize(item) as unknown as ResourceCollectionMap[T][number]) : null;
+  try {
+    await connectToDatabase();
+    const Model = resourceModels[resource];
+    const item = await Model.findById(id).lean();
+    return item ? (serialize(item) as unknown as ResourceCollectionMap[T][number]) : null;
+  } catch {
+    // Fallback: check local store by _id
+    const localItems = localStoreGetAll(resource);
+    const localMatch = localItems.find((item: any) => item._id === id);
+    return localMatch as unknown as ResourceCollectionMap[T][number] | null;
+  }
 }
 
 export async function createResource<T extends ResourceKey>(
   resource: T,
   payload: Record<string, unknown>
 ): Promise<ResourceCollectionMap[T][number]> {
-  await connectToDatabase();
-
   const normalized = normalizePayload(resource, payload);
   const parsed = resourceSchemas[resource].parse(normalized);
-  const Model = resourceModels[resource];
 
-  const created = await Model.create(toDatabasePayload(parsed));
-
-  return serialize(created.toObject()) as unknown as ResourceCollectionMap[T][number];
+  try {
+    await connectToDatabase();
+    const Model = resourceModels[resource];
+    const created = await Model.create(toDatabasePayload(parsed));
+    return serialize(created.toObject()) as unknown as ResourceCollectionMap[T][number];
+  } catch (error) {
+    logFallback(resource, error);
+    console.warn(`[local-store] MongoDB unavailable — saving '${resource}' item to local file store.`);
+    return localStoreCreate(resource, parsed as Record<string, unknown>) as unknown as ResourceCollectionMap[T][number];
+  }
 }
 
 export async function updateResource<T extends ResourceKey>(
@@ -318,24 +364,36 @@ export async function updateResource<T extends ResourceKey>(
   id: string,
   payload: Record<string, unknown>
 ): Promise<ResourceCollectionMap[T][number] | null> {
-  await connectToDatabase();
-
   const normalized = normalizePayload(resource, payload);
   const parsed = resourceSchemas[resource].parse(normalized);
-  const Model = resourceModels[resource];
 
-  const updated = await Model.findByIdAndUpdate(id, toDatabasePayload(parsed), {
-    new: true,
-    runValidators: true
-  }).lean();
-
-  return updated ? (serialize(updated) as unknown as ResourceCollectionMap[T][number]) : null;
+  try {
+    await connectToDatabase();
+    const Model = resourceModels[resource];
+    const updated = await Model.findByIdAndUpdate(id, toDatabasePayload(parsed), {
+      new: true,
+      runValidators: true
+    }).lean();
+    return updated ? (serialize(updated) as unknown as ResourceCollectionMap[T][number]) : null;
+  } catch (error) {
+    logFallback(resource, error);
+    console.warn(`[local-store] MongoDB unavailable — updating '${resource}/${id}' in local file store.`);
+    // Try to update in local store; if not found there, create it fresh.
+    const result = localStoreUpdate(resource, id, parsed as Record<string, unknown>)
+      ?? localStoreCreate(resource, { ...parsed, _id: id } as Record<string, unknown>);
+    return result as unknown as ResourceCollectionMap[T][number];
+  }
 }
 
 export async function deleteResource(resource: ResourceKey, id: string) {
-  await connectToDatabase();
-  const Model = resourceModels[resource];
-  await Model.findByIdAndDelete(id);
+  try {
+    await connectToDatabase();
+    const Model = resourceModels[resource];
+    await Model.findByIdAndDelete(id);
+  } catch {
+    // Try local store first, ignore if not found there
+    localStoreDelete(resource, id);
+  }
 }
 
 export async function getCategories<T extends ResourceKey>(resource: T) {

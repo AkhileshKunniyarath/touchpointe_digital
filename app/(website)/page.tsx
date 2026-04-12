@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Code, Smartphone, Briefcase, Database, CloudUpload, Cpu, Shield, Globe, Award, Settings, Layers, Zap } from "lucide-react";
 
 import { SectionWrapper } from "@/components/site/section-wrapper";
-import { cn, slugify } from "@/lib/utils";
+import { cn, slugify, toDisplayImageUrl } from "@/lib/utils";
 import { TestimonialSlider } from "@/components/site/testimonial-slider";
 import { ServicePicker } from "@/components/site/service-picker";
 import { ContactForm } from "@/components/site/contact-form";
@@ -12,7 +12,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Homepage from "@/models/Homepage";
 import { getCollection } from "@/lib/resource-service";
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 // ---- DEFAULT DATA ARRAYS ---- //
 const defaultCopy = {
@@ -69,7 +69,7 @@ const workflowStepsFallback = [
   { id: "06", title: "Product Launch", desc: "Final deployment payload." }
 ];
 
-const clientsFallback = ["TECH ENTERPRISE", "GLOBEX CORPORATION", "STELLAR AI", "VISIONARY LABS", "NEXUS SYSTEMS", "OMEGA CLOUD", "QUANTUM DATA"];
+const clientsFallback = ["SANJEEVANI AYURVEDIC HOSPITAL", "TECH ENTERPRISE", "GLOBEX CORPORATION", "STELLAR AI", "VISIONARY LABS", "NEXUS SYSTEMS", "OMEGA CLOUD", "QUANTUM DATA"];
 
 const aiSolutionsFallback = [
   { title: "Computer Vision Models", desc: "Detect, analyze, and process visual data securely at scale.", color: "from-purple-600/20" },
@@ -130,7 +130,7 @@ export default async function HomePage() {
   // Real Database Fetching Mixed With DB Fallbacks
   const copy = { ...defaultCopy, ...(dbData?.copy || {}) };
   
-  const dbClients = dbData?.clients?.length ? dbData.clients : clientsFallback;
+  const baseClients = dbData?.clients?.length ? dbData.clients : clientsFallback;
   const dbWorkflowSteps = dbData?.workflowSteps?.length ? dbData.workflowSteps : workflowStepsFallback;
   const dbAiSolutions = dbData?.aiSolutions?.length ? dbData.aiSolutions : aiSolutionsFallback;
   const dbIndustries = dbData?.industries?.length ? dbData.industries : industriesFallback;
@@ -174,7 +174,7 @@ export default async function HomePage() {
       desc,
       slug: serviceSlugSet.has(candidateSlug) ? candidateSlug : ""
     };
-  }).filter((cap) => cap.title);
+  }).filter((cap: any) => cap.title);
   const capabilityFromService = (slug: string) => {
     const service = serviceBySlug.get(slug);
     if (!service) {
@@ -229,6 +229,15 @@ export default async function HomePage() {
   } catch (e) {
     recentWork = [];
   }
+
+  const dbClients = Array.from(
+    new Set(
+      [
+        ...recentWork.map((item) => String(item?.client || "").trim().toUpperCase()),
+        ...baseClients.map((client: any) => String(client || "").trim().toUpperCase())
+      ].filter(Boolean)
+    )
+  );
 
   return (
     <>
@@ -386,7 +395,7 @@ export default async function HomePage() {
                   <div className="relative w-full h-52 overflow-hidden rounded-t-3xl bg-gradient-to-br from-slate-800 to-slate-900">
                     {item.coverImage ? (
                       <img
-                        src={item.coverImage}
+                        src={toDisplayImageUrl(item.coverImage)}
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />

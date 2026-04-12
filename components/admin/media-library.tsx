@@ -7,6 +7,7 @@ import { UploadCloud } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { MediaAsset } from "@/lib/content-types";
+import { toDisplayImageUrl } from "@/lib/utils";
 
 type MediaLibraryProps = {
   initialAssets: MediaAsset[];
@@ -95,13 +96,18 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
           {assets.map((asset) => (
             <div key={asset.key} className="surface overflow-hidden">
               <div className="relative aspect-[4/3] bg-gradient-to-br from-sky-400/20 to-violet-400/20">
-                <img src={asset.url} alt={asset.key} className="h-full w-full object-cover" />
+                <img src={toDisplayImageUrl(asset.url)} alt={asset.key} className="h-full w-full object-cover" />
               </div>
               <div className="space-y-2 p-4">
                 <p className="break-all text-sm font-medium text-white">{asset.key}</p>
-                <a href={asset.url} target="_blank" rel="noreferrer" className="text-xs text-sky-200">
-                  Open asset
+                <a href={toDisplayImageUrl(asset.url)} target="_blank" rel="noreferrer" className="block text-xs text-sky-200">
+                  Open proxied URL
                 </a>
+                {asset.storageUrl ? (
+                  <a href={asset.storageUrl} target="_blank" rel="noreferrer" className="block break-all text-[11px] text-slate-400">
+                    Storage URL
+                  </a>
+                ) : null}
               </div>
             </div>
           ))}

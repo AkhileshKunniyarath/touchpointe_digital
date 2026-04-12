@@ -7,6 +7,7 @@ import { PageHero } from "@/components/site/page-hero";
 import { connectToDatabase } from "@/lib/mongodb";
 import Career from "@/models/Career";
 import { ContactForm } from "@/components/site/contact-form";
+import { normalizeHtmlImageSources } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -40,13 +41,13 @@ export default async function CompanyPostPage({ params }: { params: { slug: stri
                             prose-headings:text-white prose-headings:font-bold prose-headings:tracking-tight 
                             prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
                             prose-strong:text-white prose-ul:list-disc prose-ul:pl-4 prose-li:marker:text-blue-500"
-                 dangerouslySetInnerHTML={{ __html: job.content }} />
+                 dangerouslySetInnerHTML={{ __html: normalizeHtmlImageSources(job.content) }} />
           </div>
 
           <div className="sticky top-32 space-y-6">
              <div className="surface p-8 text-center rounded-[32px] border-t-8 border-t-blue-500">
                 <h3 className="text-xl font-bold text-white mb-3">Apply for this role</h3>
-                <p className="text-sm text-slate-400 mb-6">Send us a direct overview of your experience and we'll reach out within 48 hours.</p>
+                <p className="text-sm text-slate-400 mb-6">Send us a direct overview of your experience and we&apos;ll reach out within 48 hours.</p>
                 <Link href="#application-form" className="flex items-center justify-center w-full h-14 rounded-xl bg-white text-black font-bold hover:bg-slate-200 transition-colors">
                    Submit Application
                 </Link>

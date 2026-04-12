@@ -5,7 +5,7 @@ import { SectionWrapper } from "@/components/site/section-wrapper";
 import { PageHero } from "@/components/site/page-hero";
 import { getCollection } from "@/lib/resource-service";
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function CareerPage() {
   let jobs: any[] = [];
@@ -37,7 +37,7 @@ export default async function CareerPage() {
              <div className="surface p-12 text-center rounded-[32px] border-dashed">
                 <Building2 className="w-12 h-12 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-2">No active mandates</h3>
-                <p className="text-slate-400 max-w-md mx-auto">We aren't actively placing candidates right now, but we are always keeping an eye on top talent. Send your details to our contact team.</p>
+                <p className="text-slate-400 max-w-md mx-auto">We aren&apos;t actively placing candidates right now, but we are always keeping an eye on top talent. Send your details to our contact team.</p>
                 <Link href="/contact" className="inline-flex items-center gap-2 mt-6 text-blue-400 font-medium hover:text-white transition-colors">
                    General Inquiries <ArrowRight className="w-4 h-4"/>
                 </Link>

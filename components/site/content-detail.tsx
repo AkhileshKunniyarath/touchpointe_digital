@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import type { ResourceDocument, ResourceKey } from "@/lib/content-types";
-import { formatDate } from "@/lib/utils";
+import { formatDate, normalizeHtmlImageSources, toDisplayImageUrl } from "@/lib/utils";
 
 type ContentDetailProps = {
   item: ResourceDocument;
@@ -60,7 +60,16 @@ export function ContentDetail({ item, resource }: ContentDetailProps) {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="surface p-6 sm:p-8">
-          <div className="prose-touchpointe" dangerouslySetInnerHTML={{ __html: item.content }} />
+          {item.coverImage ? (
+            <div className="mb-6 overflow-hidden rounded-[26px] border border-white/10 bg-slate-950/60">
+              <img
+                src={toDisplayImageUrl(item.coverImage)}
+                alt={item.title}
+                className="h-[320px] w-full object-cover"
+              />
+            </div>
+          ) : null}
+          <div className="prose-touchpointe" dangerouslySetInnerHTML={{ __html: normalizeHtmlImageSources(item.content) }} />
         </div>
 
         <aside className="grid gap-6 self-start lg:sticky lg:top-28">
@@ -140,4 +149,3 @@ export function ContentDetail({ item, resource }: ContentDetailProps) {
     </article>
   );
 }
-

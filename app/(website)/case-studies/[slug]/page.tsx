@@ -12,7 +12,7 @@ type CaseStudyDetailPageProps = {
   };
 };
 
-export const revalidate = 600;
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: CaseStudyDetailPageProps): Promise<Metadata> {
   const item = await getDocumentBySlug("case-studies", params.slug);

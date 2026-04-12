@@ -78,6 +78,16 @@ export function getPublicObjectUrl(objectKey: string) {
   return `${protocol}://${config.endPoint}${portPart}/${config.bucket}/${objectKey}`;
 }
 
+export function getProxyObjectUrl(objectKey: string) {
+  const encodedKey = objectKey
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+
+  return `/api/media/${encodedKey}`;
+}
+
 export async function uploadAsset(
   objectKey: string,
   buffer: Buffer,
@@ -97,7 +107,34 @@ export async function uploadAsset(
 
   return {
     key: objectKey,
-    url: getPublicObjectUrl(objectKey)
+    url: getProxyObjectUrl(objectKey),
+    storageUrl: getPublicObjectUrl(objectKey)
+  };
+}
+
+export async function getAssetBuffer(objectKey: string) {
+  const client = getMinioClient();
+
+  if (!client) {
+    throw new Error("MinIO is not configured.");
+  }
+
+  const bucket = await ensureBucketExists(client);
+  const stat = await client.statObject(bucket, objectKey);
+  const stream = await client.getObject(bucket, objectKey);
+
+  const chunks: Buffer[] = [];
+
+  for await (const chunk of stream as AsyncIterable<Buffer | Uint8Array | string>) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  const meta = (stat.metaData || {}) as Record<string, string | undefined>;
+
+  return {
+    buffer: Buffer.concat(chunks),
+    contentType: meta["content-type"] || meta["Content-Type"] || "application/octet-stream",
+    lastModified: stat.lastModified instanceof Date ? stat.lastModified : undefined
   };
 }
 
@@ -122,7 +159,8 @@ export async function listMediaAssets(prefix = ""): Promise<MediaAsset[]> {
 
       items.push({
         key: item.name,
-        url: getPublicObjectUrl(item.name),
+        url: getProxyObjectUrl(item.name),
+        storageUrl: getPublicObjectUrl(item.name),
         lastModified: item.lastModified ? new Date(item.lastModified).toISOString() : undefined,
         size: item.size
       });
@@ -132,4 +170,3 @@ export async function listMediaAssets(prefix = ""): Promise<MediaAsset[]> {
     stream.on("end", () => resolve(items.sort((a, b) => (b.lastModified || "").localeCompare(a.lastModified || ""))));
   });
 }
-

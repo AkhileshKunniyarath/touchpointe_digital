@@ -535,6 +535,33 @@ export const seedInsights: Insight[] = [
     content: `
       <p>Teams do not notice the drag of scattered assets until they are under pressure. A reliable media library removes friction and helps brand execution stay steady.</p>
     `
+  },
+  {
+    _id: "seed-insight-4",
+    title: "What Wellness Healthcare Sites Need Before Running Ads",
+    slug: "what-wellness-healthcare-sites-need-before-running-ads",
+    summary:
+      "A practical insight from the Sanjeevani Ayurvedic project on why trust signals, treatment clarity, and mobile-first CTAs matter before paid growth.",
+    category: "Healthcare Strategy",
+    tags: ["Healthcare UX", "Conversion Strategy", "Mobile UX", "Trust Signals", "Ayurveda"],
+    author: "Touchpointe Strategy Desk",
+    readTime: 5,
+    featured: true,
+    status: "published",
+    coverImage: "/api/media/case-studies/covers/1775989224390-screenshot-2026-04-12-140625.png",
+    publishedAt: "2026-04-11",
+    content: `
+      <p>In the Sanjeevani Ayurvedic Hospital build, we found that ad spend only scales well after the website earns immediate trust and makes treatment discovery effortless.</p>
+      <h2>Key operating principles</h2>
+      <ul>
+        <li>Place credibility signals above the fold so users feel safe within the first screen</li>
+        <li>Use treatment-focused navigation to reduce cognitive load</li>
+        <li>Keep consultation actions visible on both desktop and mobile</li>
+        <li>Structure content around patient intent, not just service descriptions</li>
+      </ul>
+      <h2>Related project</h2>
+      <p>See the implementation in our case study: <a href="/case-studies/sanjeevani-ayurvedic-hospital-consultation-flow-website">Sanjeevani Ayurvedic Hospital Website for Better Consultation Flow</a>.</p>
+    `
   }
 ];
 
@@ -592,6 +619,44 @@ export const seedCaseStudies: CaseStudy[] = [
     content: `
       <p>The project was less about adding complexity and more about removing uncertainty from the publishing process.</p>
       <p>By the end of the build, the client had a cleaner path from idea to publish-ready page.</p>
+    `
+  },
+  {
+    _id: "seed-case-study-3",
+    title: "Sanjeevani Ayurvedic Hospital Website for Better Consultation Flow",
+    slug: "sanjeevani-ayurvedic-hospital-consultation-flow-website",
+    summary:
+      "A wellness-first healthcare website experience designed to improve trust, treatment discovery, and consultation intent for an Ayurvedic hospital.",
+    category: "Healthcare",
+    tags: ["Ayurveda", "Healthcare Website", "UI/UX", "Lead Generation", "Responsive Design", "WordPress"],
+    client: "Sanjeevani Ayurvedic Hospital",
+    sector: "Ayurvedic Healthcare",
+    duration: "5 weeks",
+    challenge:
+      "The brand needed a clearer digital journey that balanced traditional wellness storytelling with modern conversion paths for booking consultations.",
+    solution:
+      "Touchpointe designed a high-clarity home experience with treatment-focused navigation, above-the-fold trust indicators, dual CTAs, and a mobile-first layout to reduce friction.",
+    results: [
+      "Clear treatment discovery path across About, Services, Treatments, and Contact",
+      "Prominent consultation and call actions surfaced in the first screen",
+      "Trust layer strengthened with credibility highlights (20+ years, 5000+ patients, 15+ expert vaidyas)",
+      "Improved readability and action hierarchy for mobile visitors"
+    ],
+    stack: ["WordPress CMS", "Custom UI/UX Design", "Responsive Frontend", "On-page SEO", "Performance Optimization"],
+    featured: true,
+    status: "published",
+    coverImage: "/api/media/case-studies/covers/1775989224390-screenshot-2026-04-12-140625.png",
+    publishedAt: "2026-04-11",
+    content: `
+      <p>This project focused on making a healthcare-first digital experience feel calm, trustworthy, and action-oriented without losing the traditional Ayurveda brand voice.</p>
+      <h2>What was delivered</h2>
+      <ul>
+        <li>Trust-first hero messaging with a clear consultation call-to-action</li>
+        <li>Treatment-focused navigation architecture for faster service discovery</li>
+        <li>Credibility blocks designed around years of practice, patient confidence, and practitioner expertise</li>
+        <li>Mobile-friendly spacing, typography, and section pacing for better reading flow</li>
+      </ul>
+      <p>Live project: <a href="https://sanjeevaniayurvedics.com" target="_blank" rel="noopener noreferrer">sanjeevaniayurvedics.com</a></p>
     `
   }
 ];

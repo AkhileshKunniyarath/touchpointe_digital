@@ -58,7 +58,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex relative z-10">
           <Link href="/contact" className="text-lg font-bold text-white hover:text-blue-400 transition-colors">
-            Let's talk
+            Let&apos;s talk
           </Link>
         </div>
 

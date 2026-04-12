@@ -54,3 +54,54 @@ export function readingTimeFromText(content: string) {
   return Math.max(1, Math.round(words / 220));
 }
 
+export function toDisplayImageUrl(value?: string) {
+  if (!value) {
+    return "";
+  }
+
+  if (
+    value.startsWith("/api/media/") ||
+    value.startsWith("/") ||
+    value.startsWith("data:")
+  ) {
+    return value;
+  }
+
+  try {
+    const parsed = new URL(value);
+    const pathSegments = parsed.pathname.split("/").filter(Boolean);
+
+    if (!pathSegments.length) {
+      return value;
+    }
+
+    const bucket = pathSegments[0];
+    const keySegments = pathSegments.slice(1);
+
+    if (!keySegments.length) {
+      return value;
+    }
+
+    if (parsed.hostname.includes("minio") || bucket === "touchpointe") {
+      const encodedKey = keySegments
+        .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
+        .join("/");
+      return `/api/media/${encodedKey}`;
+    }
+  } catch {
+    return value;
+  }
+
+  return value;
+}
+
+export function normalizeHtmlImageSources(html?: string) {
+  if (!html) {
+    return "";
+  }
+
+  return html.replace(
+    /(<img\b[^>]*\bsrc\s*=\s*["'])([^"']+)(["'])/gi,
+    (_match, prefix: string, src: string, suffix: string) => `${prefix}${toDisplayImageUrl(src)}${suffix}`
+  );
+}

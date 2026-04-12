@@ -30,10 +30,17 @@ export async function connectToDatabase() {
   }
 
   if (!globalCache.promise) {
-    globalCache.promise = mongoose.connect(MONGODB_URI, {
-      dbName: MONGODB_DB_NAME,
-      bufferCommands: false
-    });
+    globalCache.promise = mongoose
+      .connect(MONGODB_URI, {
+        dbName: MONGODB_DB_NAME,
+        bufferCommands: false
+      })
+      .catch((err) => {
+        // Reset so next request retries instead of hanging on a broken promise
+        globalCache.promise = null;
+        globalCache.connection = null;
+        throw err;
+      });
   }
 
   globalCache.connection = await globalCache.promise;

@@ -8,7 +8,7 @@ const careerSchema = createContentSchema({
   salaryRange: { type: String, default: "" },
 });
 
-careerSchema.index({ slug: 1 }, { unique: true });
+
 careerSchema.index({ department: 1 });
 
 const Career = models.Career || model("Career", careerSchema);

@@ -75,6 +75,7 @@ export interface ContactSubmission {
 export interface MediaAsset {
   key: string;
   url: string;
+  storageUrl?: string;
   lastModified?: string;
   size?: number;
 }

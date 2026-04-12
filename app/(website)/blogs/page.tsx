@@ -12,7 +12,7 @@ type BlogsPageProps = {
   };
 };
 
-export const revalidate = 600;
+export const revalidate = 0;
 
 export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   const config = resourceConfigs.blogs;

@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2, UploadCloud } from "lucide-react";
 
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { ResourceDocument, ResourceKey } from "@/lib/content-types";
 import type { AdminFieldConfig } from "@/lib/resource-config";
-import { formatDate, slugify } from "@/lib/utils";
+import { formatDate, slugify, toDisplayImageUrl } from "@/lib/utils";
 
 type ResourceManagerProps = {
   resource: ResourceKey;
@@ -103,6 +103,15 @@ export function ResourceManager({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const imageFields = allFields.filter((field) => field.type === "image");
+  const [imageFolders, setImageFolders] = useState<Record<string, string>>(() =>
+    Object.fromEntries(imageFields.map((field) => [field.name, `${resource}/covers`]))
+  );
+  const [imageFiles, setImageFiles] = useState<Record<string, File | null>>(() =>
+    Object.fromEntries(imageFields.map((field) => [field.name, null]))
+  );
+  const [uploadingImageField, setUploadingImageField] = useState<string | null>(null);
+  const [imageMessages, setImageMessages] = useState<Record<string, string>>({});
 
   const resetForm = () => {
     setSelectedId(null);
@@ -191,10 +200,16 @@ export function ResourceManager({
               Object.entries(formState).map(([key, value]) => [key, typeof value === "boolean" ? value : String(value)])
             );
 
+            // Seed items have non-ObjectId IDs (e.g. "seed-case-study-1").
+            // We cannot PUT to update a record that was never in MongoDB.
+            // Instead, treat it as a CREATE (POST) so a real DB record gets made.
+            const isMongoBsonId = selectedId ? /^[a-f\d]{24}$/i.test(selectedId) : false;
+            const isRealDbItem = selectedId && isMongoBsonId;
+
             startTransition(async () => {
               try {
-                const response = await fetch(selectedId ? `/api/${resource}/${selectedId}` : `/api/${resource}`, {
-                  method: selectedId ? "PUT" : "POST",
+                const response = await fetch(isRealDbItem ? `/api/${resource}/${selectedId}` : `/api/${resource}`, {
+                  method: isRealDbItem ? "PUT" : "POST",
                   headers: {
                     "Content-Type": "application/json"
                   },
@@ -210,14 +225,15 @@ export function ResourceManager({
                 const savedItem = result.item as ResourceDocument;
 
                 setItems((current) => {
-                  if (selectedId) {
+                  // Real DB item: replace in-place; seed item saved as new: prepend
+                  if (isRealDbItem) {
                     return current.map((item) => (String(item._id || "") === selectedId ? savedItem : item));
                   }
 
                   return [savedItem, ...current];
                 });
 
-                setMessage(selectedId ? "Item updated." : "Item created.");
+                setMessage(isRealDbItem ? "Item updated." : "Item created successfully in database.");
                 resetForm();
               } catch (error) {
                 setMessage(error instanceof Error ? error.message : "Save failed.");
@@ -253,12 +269,114 @@ export function ResourceManager({
                   ))}
                 </select>
               ) : null}
-              {field.type === "text" || field.type === "tags" || field.type === "image" ? (
+              {field.type === "text" || field.type === "tags" ? (
                 <Input
                   value={String(formState[field.name] || "")}
                   onChange={(event) => setFieldValue(field.name, event.target.value)}
                   placeholder={field.placeholder}
                 />
+              ) : null}
+              {field.type === "image" ? (
+                <div className="grid gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Cover Image URL</p>
+                    <Input
+                      value={String(formState[field.name] || "")}
+                      onChange={(event) => setFieldValue(field.name, event.target.value)}
+                      placeholder={field.placeholder}
+                    />
+                  </div>
+                  
+                  <div className="my-1 border-t border-white/10" />
+                  
+                  <div className="space-y-3">
+                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Or Upload To MinIO</p>
+                    <Input
+                      value={imageFolders[field.name] || `${resource}/covers`}
+                      onChange={(event) =>
+                        setImageFolders((current) => ({
+                          ...current,
+                          [field.name]: event.target.value
+                        }))
+                      }
+                      placeholder={`Folder: ${resource}/covers`}
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        setImageFiles((current) => ({
+                          ...current,
+                          [field.name]: event.target.files?.[0] || null
+                        }))
+                      }
+                      className="w-full rounded-[18px] border border-dashed border-white/15 bg-white/5 px-4 py-3 text-sm text-slate-300"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                      const file = imageFiles[field.name];
+
+                      if (!file) {
+                        setImageMessages((current) => ({ ...current, [field.name]: "Select an image file first." }));
+                        return;
+                      }
+
+                      const folder = String(imageFolders[field.name] || `${resource}/covers`)
+                        .trim()
+                        .replace(/^\/+|\/+$/g, "");
+                      const uploadFormData = new FormData();
+                      uploadFormData.append("folder", folder || `${resource}/covers`);
+                      uploadFormData.append("file", file);
+
+                      setUploadingImageField(field.name);
+                      setImageMessages((current) => ({ ...current, [field.name]: "" }));
+
+                      startTransition(async () => {
+                        try {
+                          const response = await fetch("/api/upload", {
+                            method: "POST",
+                            body: uploadFormData
+                          });
+                          const result = await response.json();
+
+                          if (!response.ok) {
+                            throw new Error(result.error || "Image upload failed.");
+                          }
+
+                          setFieldValue(field.name, result.asset.url || "");
+                          setImageFiles((current) => ({ ...current, [field.name]: null }));
+                          setImageMessages((current) => ({ ...current, [field.name]: "Image uploaded and URL applied." }));
+                        } catch (error) {
+                          setImageMessages((current) => ({
+                            ...current,
+                            [field.name]: error instanceof Error ? error.message : "Image upload failed."
+                          }));
+                        } finally {
+                          setUploadingImageField(null);
+                        }
+                      });
+                    }}
+                    disabled={uploadingImageField === field.name}
+                    className="inline-flex h-11 items-center justify-center rounded-full border border-sky-300/30 bg-sky-300/15 px-5 text-sm font-semibold text-sky-100 transition hover:bg-sky-300/20 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    <UploadCloud className="mr-2 h-4 w-4" />
+                    {uploadingImageField === field.name ? "Uploading..." : "Upload Image"}
+                  </button>
+                  {imageMessages[field.name] ? (
+                    <p className="text-xs text-slate-300">{imageMessages[field.name]}</p>
+                  ) : null}
+                  </div>
+                  {String(formState[field.name] || "").trim() ? (
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+                      <img
+                        src={toDisplayImageUrl(String(formState[field.name] || ""))}
+                        alt={`${field.label} preview`}
+                        className="h-48 w-full object-cover"
+                      />
+                    </div>
+                  ) : null}
+                </div>
               ) : null}
               {field.type === "number" ? (
                 <Input
