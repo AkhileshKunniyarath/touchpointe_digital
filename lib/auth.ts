@@ -41,6 +41,18 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/admin/login"
   },
+  logger: {
+    error(code, metadata) {
+      // Suppress JWEDecryptionFailed noise caused by stale browser cookies.
+      // NextAuth handles it gracefully (returns an empty session) — no action needed.
+      if (code === "JWT_SESSION_ERROR") return;
+      console.error("[next-auth][error]", code, metadata);
+    },
+    warn(code) {
+      console.warn("[next-auth][warn]", code);
+    },
+    debug() {}
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
