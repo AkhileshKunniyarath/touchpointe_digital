@@ -227,7 +227,7 @@ export function HomepageEditor({ initialData }: { initialData: any }) {
          {activeTab === "arrays2" && (
            <div className="space-y-12">
              <div className="bg-[#030303] border border-white/10 rounded-2xl p-8 shadow-xl">
-                <h4 className="text-xl font-bold text-white mb-2">"How We Execute" Framework</h4>
+                <h4 className="text-xl font-bold text-white mb-2">&ldquo;How We Execute&rdquo; Framework</h4>
                 <div className="grid gap-6 md:grid-cols-2 mt-8">
                    {data.workflowSteps.map((step: any, i: number) => (
                       <div key={i} className="bg-white/5 p-6 rounded-2xl border border-white/10 space-y-4 relative">

@@ -9,13 +9,13 @@ import { defaultMetadata } from "@/lib/site";
 import "./globals.css";
 
 const bodyFont = Poppins({
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
   variable: "--font-body"
 });
 
 const displayFont = Poppins({
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
   variable: "--font-display"
 });
@@ -50,7 +50,7 @@ function GoogleAnalytics() {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
         className={`${bodyFont.variable} ${displayFont.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >

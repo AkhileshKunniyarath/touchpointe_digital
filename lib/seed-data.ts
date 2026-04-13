@@ -13,81 +13,240 @@ const logo = "/brand/logo.jpeg";
 export const seedServices: Service[] = [
   {
     _id: "seed-service-1",
-    title: "Conversion Website Systems",
-    slug: "conversion-website-systems",
+    title: "Custom Software Development",
+    slug: "custom-software-development",
     summary:
-      "Full-funnel websites designed to clarify offers, shorten decision time, and give marketing teams room to scale.",
-    category: "Web Experience",
-    tags: ["Next.js", "UX Strategy", "SEO"],
-    icon: "Rocket",
-    outcomes: ["Sharper positioning", "Faster launch cycles", "Higher conversion quality"],
-    process: ["Discovery sprint", "Narrative architecture", "Design and development", "Optimization loop"],
-    ctaLabel: "Launch a website sprint",
+      "Scalable web applications, enterprise ERPs, and custom internal tools built for Indian businesses.",
+    category: "Software",
+    tags: [".NET", "React", "Next.js", "Node"],
+    icon: "Code2",
+    outcomes: ["Automated paper workflows", "Centralised business data", "Custom features off-the-shelf software lacks", "Real-time metrics tracking"],
+    process: ["Requirement mapping", "System architecture", "Agile coding", "Deployment & Staff Training", "Ongoing Retainer Support"],
+    ctaLabel: "Discuss custom software",
     ctaHref: "/contact",
-    priceFrom: "$4,500",
+    priceFrom: "₹65,000",
     featured: true,
     status: "published",
-    coverImage: logo,
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
     publishedAt: "2026-01-20",
     content: `
-      <p>Touchpointe builds websites that are more than polished marketing shells. We design the journey from the first headline to the final CTA so the whole experience supports trust, clarity, and action.</p>
-      <h2>What is included</h2>
+      <h2>Software Built for How You Actually Work</h2>
+      <p>Stop forcing your employees and customers to use clunky spreadsheets or generic software that doesn't fit your exact business processes. We build custom software solutions engineered specifically for the nuances of your daily operations, ensuring a 100% fit for your unique requirements.</p>
+      
+      <h3>What We Deliver</h3>
       <ul>
-        <li>Offer positioning and messaging hierarchy</li>
-        <li>Component-driven UI design and responsive implementation</li>
-        <li>CMS-ready publishing workflows for internal teams</li>
+        <li><strong>Enterprise Web Applications:</strong> Fast, cloud-based applications that run in any browser. Built on scalable architectures to handle thousands of concurrent users.</li>
+        <li><strong>ERP & CRM Systems:</strong> Don't pay insane licensing fees to Salesforce or SAP. We build bespoke systems to manage your inventory, sales pipeline, and human resources from one custom dashboard.</li>
+        <li><strong>Internal Dashboards:</strong> Give your management team a bird's eye view of all business metrics instantly with real-time data visualization.</li>
+        <li><strong>Legacy System Modernization:</strong> We take your ancient, slow, desktop-bound software and rebuild it for the modern cloud era without losing your historical data.</li>
       </ul>
-      <p>The result is a fast, flexible website system your team can keep improving after launch.</p>
+      
+      <blockquote>"Touchpointe's custom ERP completely transformed how we handle logistics. What used to take 14 spreadsheets now happens automatically in one beautiful portal."</blockquote>
+      
+      <h3>The Technical Advantage</h3>
+      <p>We do not use messy drag-and-drop builders for enterprise software. We write clean, proprietary code using modern stacks like Next.js, Node.js, and PostgreSQL. This guarantees that your software is incredibly fast, secure, and most importantly, scalable. You hold the intellectual property, free from vendor lock-in.</p>
+      
+      <p>Whether you need a specialized B2B portal for your dealers or an operational app for your remote fulfillment team, we deliver enterprise-grade software accessible at highly competitive local market rates.</p>
     `,
-    seoTitle: "Conversion Website Systems",
-    seoDescription: "Launch high-performance websites built for positioning, conversion, and scale."
+    seoTitle: "Custom Software Development | Enterprise Web Apps & CRM",
+    seoDescription: "Custom software development including web applications, enterprise systems, and internal tools."
   },
   {
     _id: "seed-service-2",
-    title: "Content Operations Design",
-    slug: "content-operations-design",
+    title: "Web Development",
+    slug: "web-development",
     summary:
-      "Editorial systems, page templates, and publishing workflows that help small teams ship content without chaos.",
-    category: "Content Engine",
-    tags: ["Content Strategy", "CMS", "Editorial Ops"],
-    icon: "PenTool",
-    outcomes: ["Consistent publishing", "Fewer content bottlenecks", "Clear reuse across channels"],
-    process: ["Audit and map", "Template design", "Authoring workflow", "Team enablement"],
-    ctaLabel: "Build a content engine",
+      "Lightning-fast business websites, local E-commerce platforms, and lead generation landing pages.",
+    category: "Web Experience",
+    tags: ["Next.js", "Tailwind", "SEO"],
+    icon: "Globe",
+    outcomes: ["Rank higher on Google", "Convert visitors into WhatsApp leads", "Load instantly on 3G connections", "Build brand authority"],
+    process: ["Wireframing", "UI/UX Design", "Frontend Coding", "Speed & SEO Optimisation", "Analytics Integration"],
+    ctaLabel: "Launch a website",
     ctaHref: "/contact",
-    priceFrom: "$3,200",
+    priceFrom: "₹25,000",
     featured: true,
     status: "published",
-    coverImage: logo,
+    coverImage: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=1000&auto=format&fit=crop",
     publishedAt: "2026-02-14",
     content: `
-      <p>Publishing momentum usually breaks where structure is missing. This service rebuilds the content pipeline so strategy, design, and writing support one another instead of competing for time.</p>
-      <p>We define reusable blocks, optimize authoring paths, and create a system that makes quality content easier to repeat.</p>
+      <h2>Websites That Work as Your 24/7 Sales Executive</h2>
+      <p>In today's highly competitive digital landscape, a slow, confusing, or outdated website is actively losing you customers to competitors. A website shouldn't just be a digital brochure; it should be a relentlessly optimizing sales engine. We build incredibly fast, mobile-first websites that look premium and are engineered specifically to generate leads and sales.</p>
+      
+      <h3>Our Web Solutions:</h3>
+      <ul>
+        <li><strong>Business Portfolios:</strong> Establish instant, undeniable credibility for your agency, clinic, law firm, or corporate enterprise with stunning visual aesthetics.</li>
+        <li><strong>E-commerce Stores:</strong> Custom payment gateways (Razorpay, PayTM, Stripe), deep inventory sync, and seamless frictionless checkout to sell your products online scaleably.</li>
+        <li><strong>Progressive Web Apps (PWAs):</strong> Websites that behave exactly like native apps, capable of sending push notifications and being saved to a customer's home screen.</li>
+        <li><strong>Lead Gen Landing Pages:</strong> Highly optimized, A/B tested pages designed solely to collect customer details and scale parallel Google/Facebook ad campaigns.</li>
+      </ul>
+      
+      <h3>Why Speed Matters</h3>
+      <p>Did you know that 53% of mobile users abandon sites that take longer than 3 seconds to load? We don't settle for bloated WordPress templates that load sluggishly. We build exclusively using modern React and Next.js technology for unmatched, near-instant performance, ensuring maximum conversion rates.</p>
     `,
-    seoTitle: "Content Operations Design",
-    seoDescription: "Build a content system that keeps publishing quality high and effort manageable."
+    seoTitle: "Modern Web Development & E-commerce",
+    seoDescription: "High-performance business websites, e-commerce platforms, and PWAs."
   },
   {
     _id: "seed-service-3",
-    title: "Launch Readiness Audits",
-    slug: "launch-readiness-audits",
+    title: "Mobile App Development",
+    slug: "mobile-app-development",
     summary:
-      "A focused review of your site, product messaging, and conversion pathways before a campaign or product launch.",
-    category: "Advisory",
-    tags: ["Audit", "Performance", "Launch"],
-    icon: "Radar",
-    outcomes: ["Cleaner launch checklist", "Clearer onboarding path", "Lower post-launch scramble"],
-    process: ["Signal review", "Gap analysis", "Prioritization", "Fix-forward roadmap"],
-    ctaLabel: "Book an audit",
+      "Native and cross-platform mobile applications for Android and iOS devices.",
+    category: "Mobile",
+    tags: ["React Native", "Flutter", "iOS", "Android"],
+    icon: "Smartphone",
+    outcomes: ["Live on Google Play & App Store", "Smooth 60fps animations", "Offline sync capabilities", "Push notifications"],
+    process: ["App UX Design", "Prototyping", "Full-stack engineering", "Beta Testing", "Store Publishing"],
+    ctaLabel: "Build your app",
     ctaHref: "/contact",
-    priceFrom: "$1,800",
-    featured: false,
+    priceFrom: "₹45,000",
+    featured: true,
     status: "published",
-    coverImage: logo,
+    coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000&auto=format&fit=crop",
     publishedAt: "2026-03-08",
     content: `
-      <p>When launches miss, it is rarely because one big thing broke. More often it is a stack of small gaps: weak narrative, fuzzy calls to action, inconsistent proof, or fragile production setup.</p>
-      <p>Touchpointe audits the full experience and gives your team a ranked roadmap of what to tighten before launch.</p>
+      <h2>Put Your Business In Your Customers' Pockets</h2>
+      <p>Building a robust mobile app is the ultimate way to retain users, build brand loyalty, and establish a direct line of communication with your audience. We engineer sleek, blazing-fast, and crash-free mobile applications that users genuinely enjoy interacting with daily.</p>
+      
+      <h3>App Development Expertise:</h3>
+      <ul>
+        <li><strong>Cross-Platform Mastery (Flutter & React Native):</strong> We write the code once and deploy it beautifully to both Android and iOS simultaneously. This saves you roughly 40% in initial development costs and drastically speeds up your time-to-market.</li>
+        <li><strong>Native iOS & Android Performance:</strong> For highly complex applications requiring heavy device hardware access (like Bluetooth, AR, machine learning, or complex threading), we build directly in Kotlin and Swift.</li>
+        <li><strong>Immaculate UI/UX Design:</strong> An app is only as good as its interface. We follow Apple's Human Interface Guidelines and Google's Material Design to ensure the app feels intuitive from the first tap.</li>
+      </ul>
+
+      <h3>End-to-End Store Publishing</h3>
+      <p>Getting rejected by the App Store for arbitrary technical reasons is a nightmare. Our team handles the entirety of the frustrating App Store and Google Play approval processes, server-side API setups, and privacy policy compliance so you don't have to worry about the technical details.</p>
+    `
+  },
+  {
+    _id: "seed-service-4",
+    title: "SaaS Product Development",
+    slug: "saas-product-development",
+    summary:
+      "End-to-end building for scalable Software-as-a-Service businesses with recurring billing.",
+    category: "Software",
+    tags: ["SaaS", "Multi-tenant", "Razorpay Subscriptions"],
+    icon: "Rocket",
+    outcomes: ["Scalable multi-tenant databases", "Secure user role management", "Automated recurring revenue", "SAML/SSO Integration"],
+    process: ["MVP Scoping", "Database Architecture", "Core Feature Development", "Stripe/Razorpay Integrations", "Beta Launch"],
+    ctaLabel: "Start your SaaS",
+    ctaHref: "/contact",
+    priceFrom: "₹1,20,000",
+    featured: true,
+    status: "published",
+    coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
+    publishedAt: "2026-03-10",
+    content: `
+      <h2>Turning Your Idea Into a Global Subscription Business</h2>
+      <p>Building a SaaS (Software as a Service) platform is vastly different from building a simple website or an internal tool. It demands rigorous database structuring, secure multi-tenant architecture, and flawless subscription logic to handle global users reliably.</p>
+      
+      <h3>Our Specialized SaaS Blueprint:</h3>
+      <ul>
+        <li><strong>Rapid MVP Development:</strong> We help you cut the fat and launch a Minimum Viable Product quickly (often in 6-8 weeks) so you can start validating the market with real paying users without wasting capital on assumptions.</li>
+        <li><strong>Subscription & Billing Integration:</strong> Complex recurring billing logic using Razorpay, Stripe, or LemonSqueezy. We handle monthly tiers, annual discounts, prorated upgrades/downgrades, dunning management, and automated invoice generation.</li>
+        <li><strong>Multi-tenant Architecture Security:</strong> Ensuring that Client A can never accidentally (or maliciously) access Client B's data is paramount. We build absolute data isolation security into the foundation of the app.</li>
+        <li><strong>Growth-Ready Infrastructure:</strong> Your app needs to remain fast regardless of whether you have 100 or 100,000 active users logged in. We architect serverless environments that auto-scale effortlessly to meet demand.</li>
+      </ul>
+      
+      <p>Partner with us, a highly technical co-founding development force, to stop worrying about code and start focusing on customer acquisition.</p>
+    `
+  },
+  {
+    _id: "seed-service-5",
+    title: "AI & Automation Solutions",
+    slug: "ai-and-automation-solutions",
+    summary:
+      "Custom AI chatbots, LLM integrations, and Zapier/Make workflow automations to slash manual effort.",
+    category: "AI",
+    tags: ["OpenAI", "Chatbots", "Workflow Automation"],
+    icon: "Bot",
+    outcomes: ["24/7 intelligent customer support", "Zero manual data entry", "Deep actionable reports", "Exponential productivity increase"],
+    process: ["Workflow Audit", "AI Model Tuning (RAG)", "API Integration", "Testing Edge Cases", "Go-Live"],
+    ctaLabel: "Automate your business",
+    ctaHref: "/contact",
+    priceFrom: "₹35,000",
+    featured: true,
+    status: "published",
+    coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop",
+    publishedAt: "2026-03-15",
+    content: `
+      <h2>Work Smarter, Not Harder With Exponential Intelligence</h2>
+      <p>Artificial Intelligence isn't just a futuristic buzzword; it is a practical, brutal force-multiplier that can immediately save your business hundreds of hours in manual, repetitive labour. We integrate powerful Large Language Models (like OpenAI's ChatGPT, Gemini, and Anthropic's Claude) directly into your custom business processes.</p>
+      
+      <h3>What AI Can Do For Your Bottom Line:</h3>
+      <ul>
+        <li><strong>Custom Trained AI Chatbots (RAG):</strong> We feed an AI your company's entire PDF knowledge base, past emails, and training manuals. The result is an elite virtual employee that can answer complex customer queries on WhatsApp, Instagram, or your website with 100% accuracy, 24/7, without requiring a salary.</li>
+        <li><strong>No-Code Workflow Automation:</strong> Stop paying employees to copy data from emails to spreadsheets, or from your CRM to your accounting software. We use high-tier integration tools like Make and Zapier to connect your disjointed apps so they silently talk to each other in the background automatically.</li>
+        <li><strong>Intelligent Data Analysis:</strong> Custom Python scripts that instantly process massive spreadsheets—saving financial personnel hours—and generate narrative insights on exactly where your operational bottlenecks are.</li>
+      </ul>
+      
+      <p>By leveraging intelligent automation, you can scale operations 10x without needing to proportionally hire 10x the staff.</p>
+    `
+  },
+  {
+    _id: "seed-service-6",
+    title: "Cloud & DevOps",
+    slug: "cloud-and-devops",
+    summary:
+      "AWS, DigitalOcean, and Hostinger deployments, server optimisation, and secure data backups.",
+    category: "Infrastructure",
+    tags: ["AWS", "Docker", "VPS", "CI/CD"],
+    icon: "CloudCog",
+    outcomes: ["99.9% guaranteed uptime", "Lower monthly server costs", "Automated code deployments", "Nightly automated backups"],
+    process: ["Architecture Review", "Containerisation", "Load Balancing", "Pipeline Setup", "Active Monitoring"],
+    ctaLabel: "Optimise infrastructure",
+    ctaHref: "/contact",
+    priceFrom: "₹15,000",
+    featured: false,
+    status: "published",
+    coverImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop",
+    publishedAt: "2026-03-20",
+    content: `
+      <h2>Rock-Solid Hosting Infrastructure & DevOps</h2>
+      <p>Is your web app crashing during high traffic spikes? Are your AWS bills shockingly high for no apparent reason? Are your developers terrified of deploying updates on a Friday? We clean up messy legacy infrastructure, eliminate technical debt, and migrate you to robust, private server setups.</p>
+      
+      <h3>Our Deep DevOps Specializations:</h3>
+      <ul>
+        <li><strong>VPS Setups & Docker Containerization:</strong> We neatly containerize your applications ensuring they run perfectly anywhere—be it on a developer's laptop or a production server. This avoids heavy vendor lock-in and drastically speeds up onboarding new devs.</li>
+        <li><strong>Cloud Optimization Deployments:</strong> Expert configuration and handling of AWS, DigitalOcean, Linux VPS environments, and high-performance Coolify. We tune architecture to balance blistering speed with extreme cost efficiency.</li>
+        <li><strong>CI/CD Pipelines:</strong> Continuous Integration and Continuous Deployment. We setup automated testing and deployment pipelines via GitHub actions, so your dev team can push updates seamlessly live to users with zero downtime.</li>
+        <li><strong>Disaster Recovery:</strong> Because hardware fails, we configure automated, encrypted nightly off-site backups with rapid restoration protocols.</li>
+      </ul>
+    `
+  },
+  {
+    _id: "seed-service-7",
+    title: "Cybersecurity & Maintenance",
+    slug: "cybersecurity-and-maintenance",
+    summary:
+      "Intensive security audits, bug fixing, penetration testing, and ongoing retained tech support.",
+    category: "Security",
+    tags: ["Audits", "Bug Fixing", "Retainers"],
+    icon: "ShieldCheck",
+    outcomes: ["Protection against data leaks", "Eliminated tech debt", "Total peace of mind", "Compliance ready"],
+    process: ["Penetration Testing", "Vulnerability Patching", "Code Refactoring", "Retainer Support", "24/7 Alerts"],
+    ctaLabel: "Secure your systems",
+    ctaHref: "/contact",
+    priceFrom: "₹12,000/mo",
+    featured: false,
+    status: "published",
+    coverImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop",
+    publishedAt: "2026-03-25",
+    content: `
+      <h2>Protecting Your Mission-Critical Digital Assets</h2>
+      <p>Launching the code is only step one. Software decays over time, dependency packages become outdated, and malicious hackers constantly discover new loopholes. Leaving enterprise software unmaintained is a massive legal and operational liability. We provide continuous security analysis and active maintenance retainers to keep your systems bulletproof.</p>
+      
+      <h3>Comprehensive Maintenance Protocols:</h3>
+      <ul>
+        <li><strong>Security Audits & Pen Testing:</strong> We aggressively, ethically hack and test your application endpoints and APIs to find database injection vulnerabilities before malicious actors do.</li>
+        <li><strong>Deep Code Refactoring & Bug Fixing:</strong> Rapid turnaround times on critical failure points. We rewrite "spaghetti code" into highly readable, manageable architecture.</li>
+        <li><strong>Ongoing Tech Retainers:</strong> Treat us like your elite, on-call CTO. We handle routine framework upgrades, intense 24/7 server monitoring, and emergency patching for a flat, predictable monthly rate.</li>
+        <li><strong>Data Compliance:</strong> Ensuring your user data handlers are fully compliant with modern data protection regulations to avoid catastrophic legal issues.</li>
+      </ul>
+      
+      <p>An attack is inevitable. The difference between a minor blip and a company-ending disaster is preparation and retained engineering support.</p>
     `
   }
 ];
