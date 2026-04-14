@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Code, Smartphone, Briefcase, Database, CloudUpload, Cpu, Shield, Globe, Award, Settings, Layers, Zap } from "lucide-react";
 
 import { SectionWrapper } from "@/components/site/section-wrapper";
@@ -16,10 +17,11 @@ export const revalidate = 0;
 
 // ---- DEFAULT DATA ARRAYS ---- //
 const defaultCopy = {
-  heroTitle1: "We empower Businesses",
-  heroTitleGradient: "with Intelligent Digital",
-  heroTitle3: "Solutions",
-  heroBtnText: "Get in touch",
+  heroTitle1: "We help local businesses",
+  heroTitleGradient: "increase revenue",
+  heroTitle3: "using AI-driven systems",
+  heroBtnText: "Book Free Consultation",
+  secondaryBtnText: "Get Growth Plan",
   credibilityHeadline: "Think Touchpointe and we think bigger than technology.",
   credibilitySub: "At Touchpointe, we're not just builders; we're innovators, problem-solvers, and your dedicated partners in technological transformation.",
   capabilitiesHeadline: "Our Capabilities",
@@ -252,12 +254,17 @@ export default async function HomePage() {
                 </span><br/>
                 {copy.heroTitle3}
               </h1>
-              <div className="mt-12">
-                 <Link href="/contact" className={cn(
-                    "inline-flex items-center justify-center rounded-full px-10 h-16 text-lg font-bold text-white",
+              <div className="mt-12 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                 <Link href="https://calendly.com/" target="_blank" rel="noopener noreferrer" className={cn(
+                    "inline-flex items-center justify-center rounded-full px-10 h-16 text-lg font-bold text-white w-full sm:w-auto",
                     "bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-400 hover:to-blue-400",
                     "transition-transform scale-100 hover:scale-[1.02] shadow-[0_0_40px_rgba(59,130,246,0.3)]"
                  )}>{copy.heroBtnText}</Link>
+                 <Link href="#growth-plan" className={cn(
+                    "inline-flex items-center justify-center rounded-full px-10 h-16 text-lg font-bold text-white w-full sm:w-auto",
+                    "bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md",
+                    "transition-all duration-300"
+                 )}>{copy.secondaryBtnText || "Get Growth Plan"}</Link>
               </div>
             </div>
 
@@ -394,10 +401,11 @@ export default async function HomePage() {
                   {/* Cover image or gradient placeholder */}
                   <div className="relative w-full h-52 overflow-hidden rounded-t-3xl bg-gradient-to-br from-slate-800 to-slate-900">
                     {item.coverImage ? (
-                      <img
+                      <Image
                         src={toDisplayImageUrl(item.coverImage)}
                         alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-slate-900 to-indigo-900/30 flex items-center justify-center">

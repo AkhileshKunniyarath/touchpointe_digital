@@ -1,82 +1,63 @@
-# Implementation Plan - Touchpointe Fullstack Website
+# Conversion & Lead Generation Overhaul Plan
 
-Build a dynamic, production-ready website for "Touchpointe" using Next.js 14 (App Router) with a integrated admin panel and MongoDB/MinIO storage.
+This plan addresses the comprehensive marketing and conversion audit you provided. We will implement the changes progressively, focusing on the high-impact "Day 1 to 3" priorities to turn the site from an informational brochure into a lead generation machine.
 
 ## User Review Required
-
 > [!IMPORTANT]
-> The project will be initialized in `d:\touchpointe\New folder\touchpointe_digital`. I will use the credentials found in the existing `.env` file in the sibling directory.
-
-> [!WARNING]
-> I will be using `Next.js 14` with the App Router as specified. The UI will follow the "Blue → Purple" gradient theme with a dark mode base.
+> **Information Needed Before Proceeding:**
+> 1. **WhatsApp Number**: For the sticky WhatsApp button and automation links.
+> 2. **Calendly Link**: For the "Book Free Consultation" call-to-actions.
+> 3. **Tracking IDs**: Do you have a Meta Pixel ID or Google Tag Manager ID ready? (We currently have GA4 natively supported via `NEXT_PUBLIC_GA_ID`).
+> 4. **CRM Integration**: The form will initially send emails (standard setup). Do you have webhook URLs or API keys for Zoho/HubSpot that we should hook into for the new lead capture?
 
 ## Proposed Changes
 
-### 1. Project Initialization & Setup
-- Initialize Next.js app with TypeScript, Tailwind, and App Router.
-- Configure `tailwind.config.ts` with the Touchpointe color palette.
-- Set up `shadcn/ui` components.
-- Configure `.env` with MongoDB and MinIO credentials.
+### 1. Homepage Positioning & Hero CTAs (Day 1)
+#### [MODIFY] `app/(website)/page.tsx`
+* **Copy Updates**: Update the default `defaultCopy` to align with the new sharp positioning: "We help local businesses increase revenue using AI-driven systems" (or similar based on your exact preference).
+* **Primary CTAs**: Change the hero button to "Book Free Consultation" linked to your Calendly. Add a secondary "Get Growth Plan" button. 
+* **Fix `<img>` Warning**: Convert the native `<img>` tag in the recent projects section to Next.js `<Image>` component for Core Web Vitals optimization.
 
-### 2. Core Library Setup
-- **MongoDB**: Initialize Mongoose connection in `lib/mongodb.ts`.
-- **MinIO**: Set up client in `lib/minio.ts`.
-- **NextAuth**: Configure admin authentication in `lib/auth.ts` and `app/api/auth/[...nextauth]/route.ts`.
-- **Zod**: Create schemas for all content types in `schemas/`.
+---
 
-### 3. Database Models
-- Create Mongoose models in `models/`:
-  - `User` (Admin)
-  - `Blog`
-  - `Service`
-  - `Product`
-  - `CaseStudy`
-  - `Insight`
+### 2. Lead Capture & Sticky Conversions (Day 1)
+#### [NEW] `components/site/whatsapp-button.tsx`
+* Create a floating, fixed-position WhatsApp click button in the bottom corner.
+#### [NEW] `components/site/lead-capture-modal.tsx`
+* Build a popup or inline lead magnet form ("Free Website Audit") requiring Name + Phone + Email.
+#### [MODIFY] `app/layout.tsx`
+* Inject the WhatsApp button and Modal provider globally so they persist across all pages.
 
-### 4. API Layer (Route Handlers)
-- Implement CRUD endpoints in `app/api/[resource]/route.ts` for all models.
-- Implement file upload handler in `app/api/upload/route.ts` (MinIO integration).
+---
 
-### 5. Design System & Components
-- Implement global styles in `app/globals.css` (Gradients, Glows).
-- Build shared components: `Navbar`, `Footer`, `Buttons`, `Cards`, `SectionWrapper`.
-- Use `Framer Motion` for smooth entrance and hover animations.
+### 3. Analytics & Tracking Foundation (Day 1)
+#### [MODIFY] `app/layout.tsx`
+* Expand the existing `GoogleAnalytics` component into a broader `<TrackingScripts>` component. 
+* Inject standard Meta Pixel tracking script and Google Tag Manager (GTM) script. 
 
-### 6. Admin Panel `/(admin)`
-- Implement layout with sidebar.
-- Create dashboard with stats.
-- Build CRUD pages for all content types.
-- Integrate `TipTap` for rich text editing.
-- Implement media gallery for MinIO assets.
+---
 
-### 7. Website Pages `/(website)`
-- **Home**: Hero section, service highlights, featured blogs.
-- **Services/Products/Blogs/Insights/CaseStudies**: Listing pages with filters and search.
-- **Detail Pages**: Dynamic routes with SEO metadata.
-- **Tech Stack & Working Flow**: Interactive sections.
-- **Contact**: Form with validation and API submission.
-
-### 8. SEO & Performance
-- Implement `generateMetadata` for dynamic pages.
-- Auto-generate `sitemap.xml` and `robots.txt`.
-- Integrate Google Analytics 4.
-- Configure ISR (Incremental Static Regeneration) for blogs and case studies.
+### 4. SEO Enhancements & Pricing 
+#### [MODIFY] `lib/site.ts`
+* Update the base metadata `keywords` array to include localized and niche terms: "AI marketing agency Kerala", "Website development Thrissur", "Automation services India".
+* Refine the `siteConfig.description` to heavily push the new value proposition.
+#### [MODIFY] `components/site/service-picker.tsx`
+* Add "Starting from ₹X" pricing badges to the service selections to eliminate pricing friction and generate qualified leads.
 
 ## Open Questions
 
-1. **Authentication**: Do you have a preferred admin email/password for the initial setup, or should I create a seed script?
-2. **Logo**: Should I attempt to generate a logo using `generate_image` based on the name "Touchpointe" if I don't have the original?
-3. **Draft Mode**: Should I implement a "Draft/Published" toggle for all content types? (Suggested: Yes).
+> [!WARNING]  
+> Before we start on Day 1 priorities, please confirm:
+> - Will you be providing the WhatsApp number and Calendly link now, or should I use placeholders that you will fill in later?
+> - For the CRM, should I build a standard API endpoint that posts to a Zapier webhook/Hubspot form so you can route it easily?
 
 ## Verification Plan
 
 ### Automated Tests
-- Build verification: `npm run build`.
-- Linting: `npm run lint`.
+- Run `npm run build` to verify the `<Image>` tag optimizations resolve the Next.js build warnings.
+- Use `npm run lint` to assure no regressions.
 
 ### Manual Verification
-- Test all CRUD operations in the admin panel.
-- Verify image uploads to MinIO.
-- Check responsive design across mobile and desktop.
-- Verify SEO tags using browser tools.
-- Check GA4 tracking events.
+- Deploy to a preview URL or test locally.
+- Verify the tracking scripts fire in the browser network tab.
+- Click the WhatsApp and Calendly buttons to ensure proper routing.

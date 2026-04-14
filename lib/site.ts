@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const siteConfig = {
   name: "Touchpointe",
   description:
-    "Touchpointe designs high-performance digital experiences, product ecosystems, and growth-ready websites for modern brands.",
+    "Touchpointe helps local businesses increase revenue in 30 days using AI-driven systems and automation.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   adminEmail: process.env.ADMIN_EMAIL || "admin@touchpointe.com",
   links: {
@@ -27,6 +27,14 @@ export const defaultMetadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
+  keywords: [
+    "AI marketing agency Kerala",
+    "Website development Thrissur",
+    "Automation services India",
+    "digital growth systems",
+    "lead generation",
+    "business automation"
+  ],
   applicationName: siteConfig.name,
   alternates: {
     canonical: "/"
@@ -52,6 +60,11 @@ export const defaultMetadata: Metadata = {
     title: `${siteConfig.name} | Digital Systems That Convert`,
     description: siteConfig.description,
     images: ["/brand/logo.jpeg"]
+  },
+  icons: {
+    icon: "/brand/logo.jpeg",
+    shortcut: "/brand/logo.jpeg",
+    apple: "/brand/logo.jpeg",
   }
 };
 
