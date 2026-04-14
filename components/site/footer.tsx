@@ -11,7 +11,10 @@ export async function Footer() {
     getCollection("products", { status: "published" })
   ]);
 
-  const sortedServices = [...services].sort((a, b) => a.title.localeCompare(b.title));
+  const uniqueServices = Array.from(new Map(services.map(s => [s.slug, s])).values());
+  const uniqueProducts = Array.from(new Map(products.map(p => [p.slug, p])).values());
+
+  const sortedServices = [...uniqueServices].sort((a, b) => a.title.localeCompare(b.title));
   const midpoint = Math.ceil(sortedServices.length / 2);
   const serviceColumns = [sortedServices.slice(0, midpoint), sortedServices.slice(midpoint)];
 
@@ -71,7 +74,7 @@ export async function Footer() {
           <div className="space-y-3">
             <p className="text-sm font-semibold text-white">Products</p>
             <div className="grid gap-2">
-              {products.map((product) => (
+              {uniqueProducts.map((product) => (
                 <Link
                   key={product.slug}
                   href={`/products/${product.slug}`}
