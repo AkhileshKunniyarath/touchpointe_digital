@@ -72,8 +72,12 @@ function serialize<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
 }
 
+function isNextBuildPhase() {
+  return process.env.NEXT_PHASE === "phase-production-build";
+}
+
 function logFallback(resource: ResourceKey | "contact", error: unknown) {
-  if (fallbackWarningShown) {
+  if (fallbackWarningShown || isNextBuildPhase()) {
     return;
   }
 
@@ -447,6 +451,7 @@ export async function createContactSubmission(payload: Record<string, unknown>) 
   const parsed = contactSubmissionSchema.parse({
     name: asString(payload.name),
     email: asString(payload.email),
+    phone: asString(payload.phone),
     company: asString(payload.company),
     serviceInterest: asString(payload.serviceInterest),
     message: asString(payload.message)
@@ -458,6 +463,7 @@ export async function createContactSubmission(payload: Record<string, unknown>) 
     return serialize(created.toObject());
   } catch (error) {
     logFallback("contact", error);
-    return parsed;
+    console.warn(`[local-store] MongoDB unavailable — saving contact submission to local file store.`);
+    return localStoreCreate("contact", parsed as Record<string, unknown>);
   }
 }

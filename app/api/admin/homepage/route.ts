@@ -7,6 +7,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Homepage from "@/models/Homepage";
 import { homepageSchema } from "@/schemas/homepage";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();

@@ -5,11 +5,11 @@ import { ArrowRight, Code, Box, Smartphone, Database, Zap } from "lucide-react";
 import Link from "next/link";
 
 const serviceCategories = [
-  { id: "development", label: "Software Engineering", icon: Code },
-  { id: "mobile", label: "Mobile Applications", icon: Smartphone },
-  { id: "data", label: "Data Intelligence", icon: Database },
-  { id: "automation", label: "Workflow Automation", icon: Zap },
-  { id: "products", label: "SaaS Products", icon: Box }
+  { id: "development", label: "Software Engineering", icon: Code, priceFrom: "₹X" },
+  { id: "mobile", label: "Mobile Applications", icon: Smartphone, priceFrom: "₹X" },
+  { id: "data", label: "Data Intelligence", icon: Database, priceFrom: "₹X" },
+  { id: "automation", label: "Workflow Automation", icon: Zap, priceFrom: "₹X" },
+  { id: "products", label: "SaaS Products", icon: Box, priceFrom: "₹X" }
 ];
 
 const categoryDetails: Record<string, { title: string, text: string, list: string[] }> = {
@@ -64,7 +64,10 @@ export function ServicePicker() {
                    className={`flex items-center gap-3 px-6 py-4 rounded-full border transition-all ${isActive ? 'bg-blue-600 border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.4)] text-white' : 'bg-slate-900/40 border-white/10 text-slate-300 hover:border-white/30 hover:bg-white/5'}`}
                  >
                    <Icon className="w-5 h-5" />
-                   <span className="font-semibold">{cat.label}</span>
+                   <div className="flex flex-col items-start">
+                     <span className="font-semibold leading-tight">{cat.label}</span>
+                     <span className="text-xs font-semibold text-white/70">Starting from {cat.priceFrom}</span>
+                   </div>
                  </button>
                )
              })}

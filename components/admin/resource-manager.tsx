@@ -2,6 +2,7 @@
 
 import { startTransition, useState } from "react";
 import { Pencil, Plus, Trash2, UploadCloud } from "lucide-react";
+import Image from "next/image";
 
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { Button } from "@/components/ui/button";
@@ -368,11 +369,13 @@ export function ResourceManager({
                   ) : null}
                   </div>
                   {String(formState[field.name] || "").trim() ? (
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
-                      <img
+                    <div className="relative h-48 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+                      <Image
                         src={toDisplayImageUrl(String(formState[field.name] || ""))}
                         alt={`${field.label} preview`}
-                        className="h-48 w-full object-cover"
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
                       />
                     </div>
                   ) : null}

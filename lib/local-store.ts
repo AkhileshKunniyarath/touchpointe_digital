@@ -11,7 +11,9 @@ import type { ResourceKey } from "@/lib/content-types";
 const DATA_DIR = path.join(process.cwd(), ".data");
 const STORE_FILE = path.join(DATA_DIR, "local-store.json");
 
-type LocalStoreShape = Partial<Record<ResourceKey, Record<string, unknown>[]>>;
+export type LocalStoreKey = ResourceKey | "contact";
+
+type LocalStoreShape = Partial<Record<LocalStoreKey, Record<string, unknown>[]>>;
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -37,13 +39,13 @@ function writeStore(store: LocalStoreShape) {
   fs.writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
 }
 
-export function localStoreGetAll(resource: ResourceKey): Record<string, unknown>[] {
+export function localStoreGetAll(resource: LocalStoreKey): Record<string, unknown>[] {
   const store = readStore();
   return store[resource] || [];
 }
 
 export function localStoreCreate(
-  resource: ResourceKey,
+  resource: LocalStoreKey,
   item: Record<string, unknown>
 ): Record<string, unknown> {
   const store = readStore();
@@ -68,7 +70,7 @@ export function localStoreCreate(
 }
 
 export function localStoreUpdate(
-  resource: ResourceKey,
+  resource: LocalStoreKey,
   id: string,
   item: Record<string, unknown>
 ): Record<string, unknown> | null {
@@ -97,7 +99,7 @@ export function localStoreUpdate(
   return updated;
 }
 
-export function localStoreDelete(resource: ResourceKey, id: string): boolean {
+export function localStoreDelete(resource: LocalStoreKey, id: string): boolean {
   const store = readStore();
 
   if (!store[resource]) {
@@ -115,7 +117,7 @@ export function localStoreDelete(resource: ResourceKey, id: string): boolean {
   return false;
 }
 
-export function localStoreHasItems(resource: ResourceKey): boolean {
+export function localStoreHasItems(resource: LocalStoreKey): boolean {
   const store = readStore();
   return (store[resource]?.length || 0) > 0;
 }

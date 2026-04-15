@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { createResource } from "@/lib/resource-service";
 import { seedInsights } from "@/lib/seed-data";
 
+export const dynamic = "force-dynamic";
+
 function isDuplicateError(error: unknown) {
   if (!error || typeof error !== "object") {
     return false;
@@ -43,4 +45,3 @@ export async function GET() {
     results
   });
 }
-

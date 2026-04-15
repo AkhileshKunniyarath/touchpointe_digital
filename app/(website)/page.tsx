@@ -131,6 +131,9 @@ export default async function HomePage() {
 
   // Real Database Fetching Mixed With DB Fallbacks
   const copy = { ...defaultCopy, ...(dbData?.copy || {}) };
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL?.trim();
+  const primaryCtaHref = calendlyUrl || "/contact";
+  const primaryCtaIsExternal = Boolean(calendlyUrl && /^https?:\/\//i.test(calendlyUrl));
   
   const baseClients = dbData?.clients?.length ? dbData.clients : clientsFallback;
   const dbWorkflowSteps = dbData?.workflowSteps?.length ? dbData.workflowSteps : workflowStepsFallback;
@@ -255,7 +258,7 @@ export default async function HomePage() {
                 {copy.heroTitle3}
               </h1>
               <div className="mt-12 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                 <Link href="https://calendly.com/" target="_blank" rel="noopener noreferrer" className={cn(
+                 <Link href={primaryCtaHref} target={primaryCtaIsExternal ? "_blank" : undefined} rel={primaryCtaIsExternal ? "noopener noreferrer" : undefined} className={cn(
                     "inline-flex items-center justify-center rounded-full px-10 h-16 text-lg font-bold text-white w-full sm:w-auto",
                     "bg-gradient-to-r from-violet-500 to-blue-500 hover:from-violet-400 hover:to-blue-400",
                     "transition-transform scale-100 hover:scale-[1.02] shadow-[0_0_40px_rgba(59,130,246,0.3)]"

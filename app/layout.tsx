@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Script from "next/script";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { Providers } from "@/app/providers";
 import { WhatsAppButton } from "@/components/site/whatsapp-button";
 import { LeadCaptureModal } from "@/components/site/lead-capture-modal";
+import { TrackingEvents } from "@/components/site/tracking-events";
 import { defaultMetadata } from "@/lib/site";
 
 import "./globals.css";
@@ -82,17 +83,31 @@ function TrackingScripts() {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+
   return (
     <html lang="en" className="dark">
       <body
         className={`${bodyFont.variable} ${displayFont.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
+        {gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
         <Providers>{children}</Providers>
         <WhatsAppButton />
         <LeadCaptureModal />
         <TrackingScripts />
+        <Suspense fallback={null}>
+          <TrackingEvents />
+        </Suspense>
       </body>
     </html>
   );
 }
-

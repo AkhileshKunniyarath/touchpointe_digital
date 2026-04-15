@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 export function LeadCaptureModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -27,16 +28,45 @@ export function LeadCaptureModal() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
     setStatus("submitting");
-    
-    // Simulate API delay for lead capture
-    setTimeout(() => {
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          company: "",
+          serviceInterest: "Growth Plan",
+          message: "Requested a free growth plan via the lead capture modal."
+        })
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error || "Unable to submit your request. Please try again.");
+      }
+
+      form.reset();
       setStatus("success");
       setTimeout(() => {
         setIsOpen(false);
         setStatus("idle");
       }, 3000);
-    }, 1500);
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Unable to submit your request. Please try again.");
+    }
   };
 
   if (!isOpen) return null;
@@ -77,7 +107,9 @@ export function LeadCaptureModal() {
                 name="name"
                 type="text" 
                 required 
+                minLength={2}
                 placeholder="Your Name"
+                autoComplete="name"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
               />
             </div>
@@ -89,6 +121,7 @@ export function LeadCaptureModal() {
                 type="email" 
                 required 
                 placeholder="Work Email"
+                autoComplete="email"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
               />
             </div>
@@ -100,9 +133,16 @@ export function LeadCaptureModal() {
                 type="tel" 
                 required 
                 placeholder="Phone Number"
+                inputMode="tel"
+                autoComplete="tel"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
               />
             </div>
+
+            {status === "error" && errorMessage && (
+              <p className="text-sm text-red-400">{errorMessage}</p>
+            )}
+
             <button
               type="submit"
               disabled={status === "submitting"}

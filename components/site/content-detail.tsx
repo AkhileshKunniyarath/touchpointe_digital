@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import type { ResourceDocument, ResourceKey } from "@/lib/content-types";
@@ -61,11 +62,13 @@ export function ContentDetail({ item, resource }: ContentDetailProps) {
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="surface p-6 sm:p-8">
           {item.coverImage ? (
-            <div className="mb-6 overflow-hidden rounded-[26px] border border-white/10 bg-slate-950/60">
-              <img
+            <div className="relative mb-6 h-[320px] w-full overflow-hidden rounded-[26px] border border-white/10 bg-slate-950/60">
+              <Image
                 src={toDisplayImageUrl(item.coverImage)}
                 alt={item.title}
-                className="h-[320px] w-full object-cover"
+                fill
+                sizes="100vw"
+                className="object-cover"
               />
             </div>
           ) : null}

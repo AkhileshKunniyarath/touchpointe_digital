@@ -17,6 +17,8 @@ const tags = [
 export function ContactForm() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -26,14 +28,47 @@ export function ContactForm() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setStatus("idle");
+    setErrorMessage("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const message = String(formData.get("message") || "").trim();
+    const serviceInterest = selectedTags.length ? selectedTags.join(", ") : "General Inquiry";
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          company: "",
+          serviceInterest,
+          message
+        })
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error || "Unable to submit. Please try again.");
+      }
+
       setSelectedTags([]);
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+      form.reset();
+      setStatus("success");
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Unable to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -69,16 +104,25 @@ export function ContactForm() {
        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="space-y-2">
              <label className="text-xs font-semibold text-white/50 uppercase tracking-widest pl-1">Full Name</label>
-             <input required type="text" className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" />
+             <input name="name" required minLength={2} type="text" className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" autoComplete="name" />
           </div>
           <div className="space-y-2">
              <label className="text-xs font-semibold text-white/50 uppercase tracking-widest pl-1">Work Email</label>
-             <input required type="email" className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@enterprise.com" />
+             <input name="email" required type="email" className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@enterprise.com" autoComplete="email" />
           </div>
           <div className="space-y-2">
              <label className="text-xs font-semibold text-white/50 uppercase tracking-widest pl-1">Project Details</label>
-             <textarea required rows={4} className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Tell us about your strategic goals..." />
+             <textarea name="message" required minLength={20} rows={4} className="w-full bg-[#030303] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none" placeholder="Tell us about your strategic goals..." />
           </div>
+
+          {status === "success" && (
+            <p className="text-sm text-emerald-400">Thanks — we&apos;ll reach out shortly.</p>
+          )}
+
+          {status === "error" && errorMessage && (
+            <p className="text-sm text-red-400">{errorMessage}</p>
+          )}
+
           <button 
             type="submit" 
             disabled={isSubmitting}

@@ -1,6 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 import type { ResourceDocument, ResourceKey } from "@/lib/content-types";
@@ -46,10 +45,11 @@ export function ResourceGrid({ items, resource }: ResourceGridProps) {
         >
           <div className="relative mb-6 aspect-[16/10] overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br from-sky-400/20 via-transparent to-violet-400/25">
             {item.coverImage ? (
-              <img
+              <Image
                 src={toDisplayImageUrl(item.coverImage)}
                 alt={item.title}
-                className="h-full w-full object-cover opacity-70 transition group-hover:scale-105"
+                fill
+                className="object-cover opacity-70 transition group-hover:scale-105"
               />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-br from-slate-950/0 to-slate-950/70" />
