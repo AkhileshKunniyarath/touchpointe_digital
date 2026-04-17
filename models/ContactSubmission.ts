@@ -10,6 +10,10 @@ const contactSubmissionSchema = new Schema(
       type: String,
       required: true
     },
+    phone: {
+      type: String,
+      default: ""
+    },
     company: {
       type: String,
       default: ""

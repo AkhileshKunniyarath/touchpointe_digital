@@ -61,6 +61,25 @@ async function ensureBucketExists(client: Client) {
     await client.makeBucket(config.bucket);
   }
 
+  // Set public read policy so uploaded assets are accessible via direct URL
+  const publicReadPolicy = JSON.stringify({
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Principal: { AWS: ["*"] },
+        Action: ["s3:GetObject"],
+        Resource: [`arn:aws:s3:::${config.bucket}/*`]
+      }
+    ]
+  });
+
+  try {
+    await client.setBucketPolicy(config.bucket, publicReadPolicy);
+  } catch {
+    // Non-fatal: policy may already be set or permissions may differ
+  }
+
   return config.bucket;
 }
 

@@ -52,41 +52,41 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
         }}
       >
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-sky-200">Media Library</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">Upload new asset</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
+          <p className="text-sm uppercase tracking-[0.24em] text-[#7C3AED] font-semibold">Media Library</p>
+          <h2 className="mt-3 text-2xl font-semibold text-slate-900">Upload new asset</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
             Files are stored in MinIO and can be reused across services, blogs, products, and case studies.
           </p>
         </div>
-        <label className="grid gap-2 text-sm text-slate-200">
+        <label className="grid gap-2 text-sm text-slate-900 font-medium">
           <span>Folder</span>
           <input
             type="text"
             name="folder"
             defaultValue="touchpointe"
-            className="h-11 rounded-2xl border border-white/10 bg-slate-950/70 px-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]"
           />
         </label>
-        <label className="grid gap-2 text-sm text-slate-200">
+        <label className="grid gap-2 text-sm text-slate-900 font-medium">
           <span>File</span>
           <input
             type="file"
             name="file"
             required
-            className="rounded-[24px] border border-dashed border-white/15 bg-white/5 px-4 py-6 text-sm text-slate-300"
+            className="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600"
           />
         </label>
         <Button type="submit" disabled={isPending}>
           <UploadCloud className="mr-2 h-4 w-4" />
           {isPending ? "Uploading..." : "Upload asset"}
         </Button>
-        {message ? <p className="text-sm text-slate-300">{message}</p> : null}
+        {message ? <p className="text-sm text-slate-500">{message}</p> : null}
       </form>
 
       <div className="surface-strong p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-white">Stored assets</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
+          <h2 className="text-2xl font-semibold text-slate-900">Stored assets</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
             {assets.length ? `${assets.length} asset${assets.length === 1 ? "" : "s"} available.` : "No assets uploaded yet."}
           </p>
         </div>
@@ -94,12 +94,12 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {assets.map((asset) => (
             <div key={asset.key} className="surface overflow-hidden">
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-sky-400/20 to-violet-400/20">
+              <div className="relative aspect-[4/3] bg-gradient-to-br from-[#7C3AED]/10 to-violet-400/20">
                 <img src={asset.url} alt={asset.key} className="h-full w-full object-cover" />
               </div>
               <div className="space-y-2 p-4">
-                <p className="break-all text-sm font-medium text-white">{asset.key}</p>
-                <a href={asset.url} target="_blank" rel="noreferrer" className="text-xs text-sky-200">
+                <p className="break-all text-sm font-medium text-slate-900">{asset.key}</p>
+                <a href={asset.url} target="_blank" rel="noreferrer" className="text-xs text-[#7C3AED] font-semibold hover:underline">
                   Open asset
                 </a>
               </div>

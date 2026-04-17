@@ -232,34 +232,7 @@ export default async function HomePage() {
         </ScrollReveal>
       </div>
 
-      {/* ── MARQUEE ── */}
-      <div className="w-full overflow-hidden bg-[#FAFAFA] border-y border-slate-200 py-12 mt-12 flex relative">
-        {/* Fading Edges for neat scrolling effect */}
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
 
-        <div className="flex animate-marquee whitespace-nowrap items-center">
-          {Array.from({ length: 4 }).map((_, repeatIdx) => (
-            <div key={repeatIdx} className="flex items-center shrink-0">
-              {[
-                "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg",
-              ].map((logo: string, idx: number) => (
-                <img 
-                  key={`${repeatIdx}-${idx}`} 
-                  src={logo} 
-                  alt={`Client Logo ${idx}`} 
-                  className="mx-12 h-8 object-contain shrink-0"
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* ── CAPABILITIES ── */}
       <div className="section-light border-b border-slate-200">

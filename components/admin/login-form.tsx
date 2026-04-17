@@ -46,9 +46,9 @@ export function LoginForm() {
       }}
     >
       <div className="space-y-2">
-        <p className="text-sm uppercase tracking-[0.24em] text-sky-200">Secure Login</p>
-        <h1 className="text-3xl font-semibold text-white">Admin sign in</h1>
-        <p className="text-sm leading-6 text-slate-300">
+        <p className="text-sm uppercase tracking-[0.24em] text-[#7C3AED] font-semibold">Secure Login</p>
+        <h1 className="text-3xl font-semibold text-slate-900">Admin sign in</h1>
+        <p className="text-sm leading-6 text-slate-500">
           Use the configured bootstrap admin credentials to manage Touchpointe content.
         </p>
       </div>
@@ -57,7 +57,7 @@ export function LoginForm() {
       <Button type="submit" disabled={isPending}>
         {isPending ? "Signing in..." : "Sign in"}
       </Button>
-      {errorMessage ? <p className="text-sm text-rose-300">{errorMessage}</p> : null}
+      {errorMessage ? <p className="text-sm text-rose-500">{errorMessage}</p> : null}
     </form>
   );
 }

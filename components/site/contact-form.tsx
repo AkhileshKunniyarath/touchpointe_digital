@@ -40,6 +40,7 @@ export function ContactForm({ serviceTags = defaultTags }: ContactFormProps) {
         body: JSON.stringify({
           name: fd.get("name"),
           email: fd.get("email"),
+          phone: fd.get("phone"),
           message: fd.get("message"),
           serviceInterest: selectedTags.join(", ") || "General inquiry",
         }),
@@ -123,10 +124,20 @@ export function ContactForm({ serviceTags = defaultTags }: ContactFormProps) {
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+              Phone Number
+            </label>
+            <input
+              name="phone"
+              type="tel"
+              className="w-full bg-[#FAFAFA] border border-slate-200 rounded-lg px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/10 transition-all"
+              placeholder="+1 (555) 000-0000"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
               Project Details
             </label>
             <textarea
-              required
               name="message"
               rows={4}
               className="w-full bg-[#FAFAFA] border border-slate-200 rounded-lg px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/10 transition-all resize-none"

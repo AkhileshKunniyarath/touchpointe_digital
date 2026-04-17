@@ -18,7 +18,7 @@ export const siteConfig = {
 
     { href: "/case-studies", label: "Case Studies" },
     { href: "/insights", label: "Insights" },
-    { href: "/career", label: "Career" }
+    { href: "/careers", label: "Careers" }
   ]
 };
 

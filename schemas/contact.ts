@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const contactSubmissionSchema = z.object({
-  name: z.string().min(2, "Name is required."),
+  name: z.string().optional().default(""),
   email: z.string().email("Enter a valid email."),
+  phone: z.string().regex(/^[+\d\s\-().]{7,20}$/, "Enter a valid phone number.").optional().or(z.literal("")).default(""),
   company: z.string().optional().default(""),
-  serviceInterest: z.string().min(2, "Please choose a service area."),
-  message: z.string().min(20, "Tell us a bit more about your project.")
+  serviceInterest: z.string().optional().default(""),
+  message: z.string().optional().default(""),
 });
-

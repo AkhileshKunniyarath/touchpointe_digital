@@ -45,14 +45,6 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="space-y-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#7C3AED]">Admin</p>
-          <div className="grid gap-2">
-            <Link href="/admin" className="text-sm text-slate-400 hover:text-white transition-colors">Dashboard</Link>
-            <Link href="/admin/media" className="text-sm text-slate-400 hover:text-white transition-colors">Media Library</Link>
-            <p className="text-sm text-slate-500">{siteConfig.adminEmail}</p>
-          </div>
-        </div>
 
         <div className="space-y-3">
           <p className="text-xs font-bold uppercase tracking-widest text-[#7C3AED]">Contact</p>

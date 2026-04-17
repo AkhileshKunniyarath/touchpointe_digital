@@ -5,6 +5,6 @@ type AdminRootLayoutProps = {
 };
 
 export default function AdminRootLayout({ children }: AdminRootLayoutProps) {
-  return <div className="min-h-screen bg-background">{children}</div>;
+  return <div className="min-h-screen bg-[#FAFAFA] selection:bg-violet-500/10">{children}</div>;
 }
 

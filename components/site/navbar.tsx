@@ -9,7 +9,13 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
 
-export function Navbar({ services = [] }: { services?: any[] }) {
+export function Navbar({ 
+  insights = [],
+  caseStudies = []
+}: { 
+  insights?: any[];
+  caseStudies?: any[];
+}) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -48,7 +54,21 @@ export function Navbar({ services = [] }: { services?: any[] }) {
               const active =
                 pathname === item.href ||
                 (item.href !== "/" && pathname.startsWith(item.href));
-              if (item.label === "Services" && services.length > 0) {
+              const isDropdown =
+                (item.label === "Insights" && insights.length > 0) ||
+                (item.label === "Case Studies" && caseStudies.length > 0);
+
+              if (isDropdown) {
+                const currentItems =
+                  item.label === "Insights"
+                    ? insights
+                    : caseStudies;
+                const exploreLink =
+                  item.label === "Insights"
+                    ? "/insights"
+                    : "/case-studies";
+                const exploreText = `Explore All ${item.label}`;
+
                 return (
                   <li key={item.href} className="relative group">
                     <Link
@@ -66,20 +86,20 @@ export function Navbar({ services = [] }: { services?: any[] }) {
                     <div className="absolute top-full -left-4 pt-5 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200">
                       <div className="bg-white rounded-xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden w-[360px] p-2.5 flex flex-col gap-1 ring-1 ring-black/5">
                         <Link 
-                          href="/services"
+                          href={exploreLink}
                           className="px-4 py-3 hover:bg-violet-50 transition-colors rounded-lg flex items-center gap-2 text-[14px] font-bold text-[#7C3AED] mb-1 group/all"
                         >
-                          Explore All Services 
+                          {exploreText} 
                           <ArrowRight className="w-4 h-4 opacity-70 group-hover/all:translate-x-1 group-hover/all:opacity-100 transition-all" />
                         </Link>
-                        {services.map((svc) => (
+                        {currentItems.map((currentItem) => (
                           <Link
-                            key={svc._id || svc.slug}
-                            href={`/services/${svc.slug}`}
+                            key={currentItem._id || currentItem.slug}
+                            href={`${exploreLink}/${currentItem.slug}`}
                             className="px-4 py-3 hover:bg-slate-50 transition-colors rounded-lg flex flex-col group/item"
                           >
-                            <span className="text-sm font-semibold text-slate-800 group-hover/item:text-[#7C3AED] transition-colors">{svc.title}</span>
-                            <span className="text-[12px] text-slate-500 line-clamp-1 mt-0.5 leading-snug">{svc.summary}</span>
+                            <span className="text-sm font-semibold text-slate-800 group-hover/item:text-[#7C3AED] transition-colors">{currentItem.title}</span>
+                            <span className="text-[12px] text-slate-500 line-clamp-1 mt-0.5 leading-snug">{currentItem.summary}</span>
                           </Link>
                         ))}
                       </div>
@@ -135,7 +155,20 @@ export function Navbar({ services = [] }: { services?: any[] }) {
               const active =
                 pathname === item.href ||
                 (item.href !== "/" && pathname.startsWith(item.href));
-              if (item.label === "Services" && services.length > 0) {
+              const isDropdown =
+                (item.label === "Insights" && insights.length > 0) ||
+                (item.label === "Case Studies" && caseStudies.length > 0);
+
+              if (isDropdown) {
+                 const currentItems =
+                  item.label === "Insights"
+                    ? insights
+                    : caseStudies;
+                 const exploreLink =
+                  item.label === "Insights"
+                    ? "/insights"
+                    : "/case-studies";
+
                  return (
                   <div key={item.href} className="flex flex-col border-b border-slate-50 last:border-0">
                     <Link
@@ -149,15 +182,15 @@ export function Navbar({ services = [] }: { services?: any[] }) {
                       {item.label}
                     </Link>
                     <div className="flex flex-col pl-6 pb-2 w-full">
-                      {services.map((svc) => (
+                      {currentItems.map((currentItem) => (
                         <Link
-                          key={svc._id || svc.slug}
-                          href={`/services/${svc.slug}`}
+                          key={currentItem._id || currentItem.slug}
+                          href={`${exploreLink}/${currentItem.slug}`}
                           className="px-6 py-2.5 text-sm text-slate-500 hover:text-[#7C3AED] transition-colors relative"
                           onClick={() => setOpen(false)}
                         >
                           <span className="absolute left-1 top-[18px] w-1.5 h-1.5 rounded-full bg-slate-200"></span>
-                          {svc.title}
+                          {currentItem.title}
                         </Link>
                       ))}
                     </div>

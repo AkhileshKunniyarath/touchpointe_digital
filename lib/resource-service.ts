@@ -344,31 +344,27 @@ export async function getCategories<T extends ResourceKey>(resource: T) {
 }
 
 export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
-  const [services, products, blogs, insights, caseStudies, careers] = await Promise.all([
-    getCollection("services", { status: "all" }),
-    getCollection("products", { status: "all" }),
-    getCollection("blogs", { status: "all" }),
+  const [insights, caseStudies] = await Promise.all([
     getCollection("insights", { status: "all" }),
-    getCollection("case-studies", { status: "all" }),
-    getCollection("careers", { status: "all" })
+    getCollection("case-studies", { status: "all" })
   ]);
 
   return {
     counts: {
-      services: services.length,
-      products: products.length,
-      blogs: blogs.length,
+      services: 0,
+      products: 0,
+      blogs: 0,
       insights: insights.length,
       "case-studies": caseStudies.length,
-      careers: careers.length
+      careers: 0
     },
     featured: {
-      services: services.filter((item) => item.featured).slice(0, 2),
-      products: products.filter((item) => item.featured).slice(0, 2),
-      blogs: blogs.filter((item) => item.featured).slice(0, 2),
-      insights: insights.filter((item) => item.featured).slice(0, 2),
-      "case-studies": caseStudies.filter((item) => item.featured).slice(0, 2),
-      careers: careers.filter((item) => item.featured).slice(0, 2)
+      services: [],
+      products: [],
+      blogs: [],
+      insights: insights.filter((item) => item.featured).slice(0, 3),
+      "case-studies": caseStudies.filter((item) => item.featured).slice(0, 3),
+      careers: []
     }
   };
 }
@@ -389,6 +385,7 @@ export async function createContactSubmission(payload: Record<string, unknown>) 
   const parsed = contactSubmissionSchema.parse({
     name: asString(payload.name),
     email: asString(payload.email),
+    phone: asString(payload.phone),
     company: asString(payload.company),
     serviceInterest: asString(payload.serviceInterest),
     message: asString(payload.message)

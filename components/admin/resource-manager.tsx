@@ -4,6 +4,7 @@ import { startTransition, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -167,14 +168,14 @@ export function ResourceManager({
       <div className="surface-strong p-6">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm uppercase tracking-[0.24em] text-sky-200">{resourceLabel}</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">{selectedId ? `Edit ${resourceLabel}` : `Create ${resourceLabel}`}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-300">{description}</p>
+            <p className="text-sm uppercase tracking-[0.24em] text-[#7C3AED] font-semibold">{resourceLabel}</p>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-900">{selectedId ? `Edit ${resourceLabel}` : `Create ${resourceLabel}`}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">{description}</p>
           </div>
           <button
             type="button"
             onClick={resetForm}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100 shadow-sm"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -228,7 +229,7 @@ export function ResourceManager({
           }}
         >
           {allFields.map((field) => (
-            <label key={field.name} className="grid gap-2 text-sm text-slate-200">
+            <label key={field.name} className="grid gap-2 text-sm text-slate-900 font-medium">
               <span>{field.label}</span>
               {field.type === "textarea" ? (
                 <Textarea
@@ -244,7 +245,7 @@ export function ResourceManager({
                 <select
                   value={String(formState[field.name] || "")}
                   onChange={(event) => setFieldValue(field.name, event.target.value)}
-                  className="h-11 rounded-2xl border border-white/10 bg-slate-950/70 px-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  className="h-11 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]"
                 >
                   {(field.options || []).map((option) => (
                     <option key={option.value} value={option.value}>
@@ -253,10 +254,17 @@ export function ResourceManager({
                   ))}
                 </select>
               ) : null}
-              {field.type === "text" || field.type === "tags" || field.type === "image" ? (
+              {field.type === "text" || field.type === "tags" ? (
                 <Input
                   value={String(formState[field.name] || "")}
                   onChange={(event) => setFieldValue(field.name, event.target.value)}
+                  placeholder={field.placeholder}
+                />
+              ) : null}
+              {field.type === "image" ? (
+                <ImageUploadField
+                  value={String(formState[field.name] || "")}
+                  onChange={(url) => setFieldValue(field.name, url)}
                   placeholder={field.placeholder}
                 />
               ) : null}
@@ -279,12 +287,12 @@ export function ResourceManager({
             </label>
           ))}
 
-          <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
+          <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 font-medium shadow-sm">
             <input
               type="checkbox"
               checked={Boolean(formState.featured)}
               onChange={(event) => setFieldValue("featured", event.target.checked)}
-              className="h-4 w-4 rounded border-white/20 bg-slate-950 text-sky-400"
+              className="h-4 w-4 rounded border-slate-300 bg-white text-[#7C3AED] focus:ring-[#7C3AED]"
             />
             Mark as featured content
           </label>
@@ -293,7 +301,7 @@ export function ResourceManager({
             <Button type="submit" disabled={isPending}>
               {isPending ? "Saving..." : selectedId ? `Update ${resourceLabel}` : `Create ${resourceLabel}`}
             </Button>
-            {message ? <p className="text-sm text-slate-300">{message}</p> : null}
+            {message ? <p className="text-sm text-slate-500">{message}</p> : null}
           </div>
         </form>
       </div>
@@ -301,8 +309,8 @@ export function ResourceManager({
       <div className="surface-strong p-6">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-white">{resourceLabel} Library</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-300">
+            <h2 className="text-2xl font-semibold text-slate-900">{resourceLabel} Library</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
               {items.length ? `${items.length} item${items.length === 1 ? "" : "s"} available.` : emptyState}
             </p>
           </div>
@@ -314,33 +322,33 @@ export function ResourceManager({
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-300">
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.22em] text-slate-500 font-semibold">
                       {item.status}
                     </span>
                     {item.featured ? (
-                      <span className="rounded-full bg-sky-300 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-950">
+                      <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-[#7C3AED]">
                         Featured
                       </span>
                     ) : null}
                   </div>
-                  <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                  <p className="text-sm text-slate-400">
+                  <h3 className="text-xl font-semibold text-slate-900">{item.title}</h3>
+                  <p className="text-sm text-slate-500 font-medium">
                     {item.category} - {formatDate(item.publishedAt)}
                   </p>
-                  <p className="text-sm leading-6 text-slate-300">{item.summary}</p>
+                  <p className="text-sm leading-6 text-slate-600">{item.summary}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => handleEdit(item)}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-[#7C3AED] shadow-sm"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(String(item._id || ""))}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose-400/20 bg-rose-400/10 text-rose-200 transition hover:bg-rose-400/20"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100 hover:text-rose-600 shadow-sm"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -349,7 +357,7 @@ export function ResourceManager({
             </div>
           ))}
 
-          {!items.length ? <div className="surface p-6 text-sm text-slate-300">{emptyState}</div> : null}
+          {!items.length ? <div className="surface p-6 text-sm text-slate-500 font-medium text-center">{emptyState}</div> : null}
         </div>
       </div>
     </div>
